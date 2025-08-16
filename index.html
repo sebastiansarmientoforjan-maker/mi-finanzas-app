@@ -1,126 +1,42 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tu Futuro Financiero</title>
+    <title>Mi Finanzas</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1 class="title">Tu Futuro Financiero</h1>
-        </header>
 
-        <div class="card main-balance">
-            <h2 class="card-title">Saldo Neto</h2>
-            <p class="balance-amount">$<span id="netBalance">0.00</span></p>
-            <div class="accounts-summary" id="accountsSummary">
-                </div>
-        </div>
+    <header>
+        <h1>Mi Dashboard Financiero</h1>
+    </header>
 
-        <div class="card module">
-            <h2 class="card-title">Presupuesto Mensual</h2>
-            <div class="budget-progress-bar">
-                <div class="progress" id="budgetProgress"></div>
+    <main>
+        <div id="accounts-container" class="dashboard-section">
             </div>
-            <p class="budget-info"><span id="spentAmount">0.00</span> / <span id="budgetAmount">0.00</span></p>
-        </div>
 
-        <div class="card module">
-            <h2 class="card-title">Transacciones Recientes</h2>
-            <div class="transaction-list" id="transactionList">
-                </div>
-        </div>
+        <div id="budget-container" class="dashboard-section">
+            </div>
 
-        <div class="card module">
-            <h2 class="card-title">Control de Deudas</h2>
-            <div class="debt-list" id="debtList">
-                </div>
-        </div>
+        <div id="transactions-container" class="dashboard-section">
+            </div>
 
-        <div class="card module">
-            <h2 class="card-title">Progreso de Objetivos</h2>
-            <div class="goal-list" id="goalList">
-                </div>
-        </div>
+        <div id="goals-container" class="dashboard-section">
+            </div>
 
-        <div class="card module">
-            <h2 class="card-title">Proyecciones a Futuro</h2>
-            <canvas id="projectionChart"></canvas>
-        </div>
+        <div id="debts-container" class="dashboard-section">
+            </div>
 
-        <div class="card module">
-            <h2 class="card-title">Resumen de Inversiones</h2>
-            <div class="investment-list" id="investmentList">
-                </div>
-        </div>
+        <div id="investments-container" class="dashboard-section">
+            </div>
+    </main>
 
-        <div class="card module">
-            <h2 class="card-title">Próxima Reunión</h2>
-            <p id="meetingDate">--/--/----</p>
-            <button class="generate-report-btn" id="generateReportBtn">Generar Reporte PDF</button>
-        </div>
-    </div>
-    
-    <div id="addTransactionModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <h2>Añadir Nueva Transacción</h2>
-        <form id="transactionForm">
-            <label for="transactionType">Tipo:</label>
-            <select id="transactionType" required>
-                <option value="Ingreso">Ingreso</option>
-                <option value="Gasto">Gasto</option>
-            </select>
-
-            <label for="transactionAmount">Monto:</label>
-            <input type="number" id="transactionAmount" required>
-
-            <label for="transactionDescription">Descripción:</label>
-            <input type="text" id="transactionDescription" required>
-
-            <label for="transactionCategory">Categoría:</label>
-            <select id="transactionCategory" required>
-                <option value="Salario">Salario</option>
-                <option value="Ventas">Ventas</option>
-                <option value="Alquiler">Alquiler</option>
-                <option value="Inversiones">Inversiones</option>
-                <option value="Otros Ingresos">Otros Ingresos</option>
-                <option value="Comida">Comida</option>
-                <option value="Transporte">Transporte</option>
-                <option value="Entretenimiento">Entretenimiento</option>
-                <option value="Facturas">Facturas</option>
-                <option value="Hogar">Hogar</option>
-                <option value="Compras">Compras</option>
-                <option value="Salud">Salud</option>
-                <option value="Otros Gastos">Otros Gastos</option>
-            </select>
-
-            <label for="transactionDate">Fecha:</label>
-            <input type="date" id="transactionDate" required>
-
-            <label for="transactionAccount">Cuenta:</label>
-            <select id="transactionAccount" required>
-                </select>
-
-            <label for="transactionFrequency">Frecuencia:</label>
-            <select id="transactionFrequency" required>
-                <option value="One-time">Única vez</option>
-                <option value="Weekly">Semanal</option>
-                <option value="Bi-weekly">Quincenal</option>
-                <option value="Monthly">Mensual</option>
-            </select>
-
-            <button type="submit">Guardar Transacción</button>
-        </form>
-    </div>
-</div>
-<button id="showModalBtn" class="add-btn">+</button>
+    <footer>
+        <p>&copy; 2024 Mi Finanzas</p>
+    </footer>
 
     <script src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </body>
 </html>
-
