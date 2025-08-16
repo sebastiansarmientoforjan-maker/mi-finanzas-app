@@ -2,7 +2,8 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://script.google.com/macros/s/AKfycby4mTt9Khfe17OHjGAL7acXQyADzPrAyUEWP79J8mIdXjoZWxuPizYarehnA8JZACrU2A/exec"
+      "destination": "https://script.google.com/macros/s/AKfycbwf7jTtolHNbQAjUt0cBMCfeV9lVWkwruRxJFokIp4RzDuV5c6wKs9vl17OT2y_nRO6gQ/exec"
     }
   ]
 }
+
