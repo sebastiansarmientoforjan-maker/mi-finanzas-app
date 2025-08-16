@@ -110,7 +110,106 @@ body {
     flex-direction: column;
     gap: 10px;
 }
+/* Estilos para el botón de agregar */
+.add-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #27ae60;
+    color: white;
+    font-size: 2em;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+    z-index: 100;
+}
+
+.add-btn:hover {
+    background-color: #229954;
+}
+
+/* Estilos para el modal (ventana emergente) */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 200;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Estilos para el formulario dentro del modal */
+#transactionForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#transactionForm label {
+    font-weight: 600;
+    color: #555;
+}
+
+#transactionForm input, #transactionForm select, #transactionForm button {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#transactionForm button {
+    background-color: #3498db;
+    color: white;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#transactionForm button:hover {
+    background-color: #2980b9;
+}
 
 /* Clases de utilidad */
 .text-success { color: #27ae60; }
+
 .text-danger { color: #e74c3c; }
