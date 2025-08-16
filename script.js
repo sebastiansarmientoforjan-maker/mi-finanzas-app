@@ -1,6 +1,7 @@
-/// REEMPLAZA ESTA URL CON LA URL DE TU API DE APPS SCRIPT
-const API_URL = 'https://script.google.com/macros/s/AKfycbz-5VyOWxtTIGus-riV3aawbWjLW3B0PKEbRvaCwOdOt5A_RcI8Y4xG9NyckfIwaY9-4Q/exec';
-const PROXY_URL = 'https://mi-finanzas-app-nine.vercel.app/'; // Reemplaza con la URL de tu app en Vercel si estás en producción
+// --- CORRECCIÓN CLAVE ---
+// La URL del proxy debe incluir la ruta /api para que Vercel la intercepte
+const PROXY_URL = 'https://mi-finanzas-app-nine.vercel.app/api'; 
+// --- FIN CORRECCIÓN ---
 
 // --- FUNCIONES CORE: OBTENER Y ENVIAR DATOS ---
 
@@ -18,11 +19,12 @@ async function fetchData(endpoint, method = 'GET', payload = null) {
     }
 
     try {
+        // Construye la URL para que el proxy de Vercel la intercepte
         const url = `${PROXY_URL}?endpoint=${endpoint}`;
         const response = await fetch(url, options);
         const data = await response.json();
         if (data.status === 'success') {
-            return data.data || data; // Retorna los datos o la respuesta completa para POST
+            return data.data || data; 
         } else {
             console.error(`Error en la operación ${endpoint}:`, data.message);
             return { status: 'error', message: data.message };
@@ -64,10 +66,10 @@ async function renderBudget() {
         console.error("No se pudo cargar el presupuesto.");
         return;
     }
-    
+    
     const monthlyBudget = budget[0].MonthlyBudget;
     const spent = budget[0].SpentThisMonth;
-    
+    
     const progressPercent = (spent / monthlyBudget) * 100;
 
     document.getElementById('budgetAmount').textContent = monthlyBudget.toFixed(2);
@@ -206,7 +208,7 @@ window.onclick = function(event) {
 // Lógica para enviar el formulario
 document.getElementById('transactionForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    
+    
     const type = document.getElementById('transactionType').value;
     const amount = parseFloat(document.getElementById('transactionAmount').value);
     const description = document.getElementById('transactionDescription').value;
