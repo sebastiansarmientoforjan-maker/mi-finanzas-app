@@ -11,14 +11,15 @@ export default async function handler(req, res) {
 
     switch (req.method) {
       case 'POST': // Create a new record
-        const { date, description, amount, account, category } = req.body;
+        const { date, description, amount, account, category, frequency } = req.body;
         const createResult = await table.create([{
           fields: {
             "Date": date,
             "Description": description,
-            "Amount": amount,
+            "Amount": parseFloat(amount),
             "Account": account,
-            "Category": category
+            "Category": category,
+            "Frequency": frequency
           }
         }]);
         return res.status(201).json({ status: 'success', data: createResult });
