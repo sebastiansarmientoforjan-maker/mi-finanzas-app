@@ -1,22 +1,33 @@
 // REEMPLAZA ESTA URL CON LA URL DE TU API DE APPS SCRIPT
-const API_URL = 'https://script.google.com/macros/s/AKfycbzLamCNWGIjPoeSGkvYuIeghKouY-sWXXZkUd9lyX07G7artYLgHmXvgdxmxIgogeTqbg/exec';
+const API_URL = 'URL_DE_TU_API_DE_APPS_SCRIPT';
 
 // --- FUNCIONES CORE: OBTENER Y RENDERIZAR DATOS ---
 
-// Función para obtener y mostrar datos
-async function fetchData(endpoint) {
+// Función para obtener y enviar datos
+async function fetchData(endpoint, method = 'GET', payload = null) {
+    const options = {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    if (payload) {
+        options.body = JSON.stringify(payload);
+    }
+
     try {
-        const response = await fetch(`${API_URL}?endpoint=${endpoint}`);
+        const response = await fetch(`${API_URL}?endpoint=${endpoint}`, options);
         const data = await response.json();
         if (data.status === 'success') {
-            return data.data;
+            return data.data || data; // Return data for GET, or the whole response for POST
         } else {
-            console.error(`Error al obtener datos de ${endpoint}:`, data.message);
-            return [];
+            console.error(`Error en la operación ${endpoint}:`, data.message);
+            return { status: 'error', message: data.message };
         }
     } catch (error) {
-        console.error(`Error de red al obtener datos de ${endpoint}:`, error);
-        return [];
+        console.error(`Error de red en la operación ${endpoint}:`, error);
+        return { status: 'error', message: 'Error de red.' };
     }
 }
 
@@ -158,7 +169,7 @@ window.onclick = function(event) {
 // Lógica para enviar el formulario
 document.getElementById('transactionForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-
+    
     const type = document.getElementById('transactionType').value;
     const amount = parseFloat(document.getElementById('transactionAmount').value);
     const description = document.getElementById('transactionDescription').value;
@@ -195,6 +206,3 @@ document.getElementById('transactionForm').addEventListener('submit', async func
         alert('Error al añadir la transacción: ' + result.message);
     }
 });
-
-
-
