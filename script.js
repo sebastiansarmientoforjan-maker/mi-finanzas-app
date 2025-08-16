@@ -1,6 +1,7 @@
 // script.js
 
 const API_URL = '/api/getAccounts';
+const TRANSACTIONS_API_URL = '/api/transactions';
 
 // Función para obtener datos de la API
 async function fetchData(sheetName) {
@@ -12,7 +13,8 @@ async function fetchData(sheetName) {
   if (result.status === 'error') {
     throw new Error(result.message);
   }
-  return result.data;
+  // Mapea sobre los datos para incluir el ID de registro de Airtable
+  return result.data.map(record => ({ id: record.id, ...record.fields }));
 }
 
 // Función para renderizar las cuentas
@@ -67,10 +69,13 @@ async function renderTransactions() {
     transactions.forEach(transaction => {
       const transactionDiv = document.createElement('div');
       transactionDiv.className = 'transaction-item';
+      transactionDiv.dataset.id = transaction.id; // Add Airtable record ID
       transactionDiv.innerHTML = `
         <p><strong>Fecha:</strong> ${transaction.Date}</p>
         <p><strong>Descripción:</strong> ${transaction.Description}</p>
         <p><strong>Monto:</strong> $${transaction.Amount}</p>
+        <button class="edit-btn">Editar</button>
+        <button class="delete-btn">Eliminar</button>
       `;
       transactionsContainer.appendChild(transactionDiv);
     });
@@ -127,42 +132,27 @@ async function renderDebts() {
 }
 
 // Función para renderizar las inversiones
-async function renderTransactions() {
-  const transactionsContainer = document.getElementById('transactions-container');
-  transactionsContainer.innerHTML = '<h2>Transacciones Recientes</h2>';
+async function renderInvestments() {
+  const investmentsContainer = document.getElementById('investments-container');
+  investmentsContainer.innerHTML = '<h2>Inversiones</h2>';
   try {
-    const transactions = await fetchData('Transactions');
-    transactions.forEach(transaction => {
-      const transactionDiv = document.createElement('div');
-      transactionDiv.className = 'transaction-item';
-      transactionDiv.dataset.id = transaction.id; // Add Airtable record ID
-      transactionDiv.innerHTML = `
-        <p><strong>Fecha:</strong> ${transaction.Date}</p>
-        <p><strong>Descripción:</strong> ${transaction.Description}</p>
-        <p><strong>Monto:</strong> $${transaction.Amount}</p>
-        <button class="edit-btn">Editar</button>
-        <button class="delete-btn">Eliminar</button>
+    const investments = await fetchData('Investments');
+    investments.forEach(investment => {
+      const investmentDiv = document.createElement('div');
+      investmentDiv.className = 'investment-item';
+      investmentDiv.innerHTML = `
+        <h3>${investment.Name}</h3>
+        <p>Costo original: $${investment.OriginalCost}</p>
+        <p>Valor actual: $${investment.CurrentValue}</p>
       `;
-      transactionsContainer.appendChild(transactionDiv);
+      investmentsContainer.appendChild(investmentDiv);
     });
   } catch (error) {
-    console.error('No se pudieron cargar las transacciones.');
-    transactionsContainer.innerHTML += '<p class="error-message">No se pudieron cargar las transacciones.</p>';
+    console.error('No se pudieron cargar las inversiones.');
+    investmentsContainer.innerHTML += '<p class="error-message">No se pudieron cargar las inversiones.</p>';
   }
 }
 
-// Carga todas las secciones del panel
-async function loadDashboard() {
-  await renderAccounts();
-  await renderBudget();
-  await renderTransactions();
-  await renderGoals();
-  await renderDebts();
-  await renderInvestments();
-}
-
-// Carga el dashboard cuando la página se carga
-document.addEventListener('DOMContentLoaded', loadDashboard);
 
 // Add Transaction Form Handling
 const transactionForm = document.getElementById('add-transaction-form');
@@ -177,7 +167,7 @@ transactionForm.addEventListener('submit', async (e) => {
   const newTransaction = { date, description, amount, account, category };
 
   try {
-    const response = await fetch('/api/transactions', {
+    const response = await fetch(TRANSACTIONS_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -196,13 +186,14 @@ transactionForm.addEventListener('submit', async (e) => {
   }
 });
 
+
 // Edit and Delete Buttons Handling
 document.addEventListener('click', async (e) => {
   if (e.target.classList.contains('delete-btn')) {
     const transactionId = e.target.closest('.transaction-item').dataset.id;
     if (confirm('¿Estás seguro de que quieres eliminar esta transacción?')) {
       try {
-        const response = await fetch('/api/transactions', {
+        const response = await fetch(TRANSACTIONS_API_URL, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -220,7 +211,19 @@ document.addEventListener('click', async (e) => {
       }
     }
   }
-  
-  // Edit functionality is more complex and will be added in a future step.
-  // For now, let's focus on the POST and DELETE methods.
 });
+
+
+// Carga todas las secciones del panel
+async function loadDashboard() {
+  await renderAccounts();
+  await renderBudget();
+  await renderTransactions();
+  await renderGoals();
+  await renderDebts();
+  await renderInvestments();
+}
+
+
+// Carga el dashboard cuando la página se carga
+document.addEventListener('DOMContentLoaded', loadDashboard);
