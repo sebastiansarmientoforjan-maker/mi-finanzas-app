@@ -55,3 +55,45 @@ p {
     color: #e74c3c;
     font-weight: bold;
 }
+
+.form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.form-container h2 {
+    text-align: center;
+}
+
+#add-transaction-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#add-transaction-form label {
+    font-weight: bold;
+    color: #555;
+}
+
+#add-transaction-form input, #add-transaction-form button, #add-transaction-form select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+#add-transaction-form button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#add-transaction-form button:hover {
+    background-color: #2980b9;
+}
