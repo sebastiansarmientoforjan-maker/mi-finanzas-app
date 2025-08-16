@@ -1,5 +1,5 @@
 /// REEMPLAZA ESTA URL CON LA URL DE TU API DE APPS SCRIPT
-const API_URL = 'https://script.google.com/macros/s/AKfycbxpbQmqxnxx1yD9_O9aiRTH4LIZUCEayiMyS-duzwQkKfMMXQY0Kdj5vt4zIpQRFxw/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbz-5VyOWxtTIGus-riV3aawbWjLW3B0PKEbRvaCwOdOt5A_RcI8Y4xG9NyckfIwaY9-4Q/exec';
 const PROXY_URL = 'https://mi-finanzas-app-nine.vercel.app/'; // Reemplaza con la URL de tu app en Vercel si estás en producción
 
 // --- FUNCIONES CORE: OBTENER Y ENVIAR DATOS ---
@@ -238,6 +238,7 @@ document.getElementById('transactionForm').addEventListener('submit', async func
         alert('Error al añadir la transacción: ' + result.message);
     }
 });
+
 
 
 
