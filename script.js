@@ -163,8 +163,9 @@ transactionForm.addEventListener('submit', async (e) => {
   const amount = parseFloat(document.getElementById('amount').value);
   const account = document.getElementById('account').value;
   const category = document.getElementById('category').value;
+  const frequency = document.getElementById('frequency').value;
 
-  const newTransaction = { date, description, amount, account, category };
+  const newTransaction = { date, description, amount, account, category, frequency };
 
   try {
     const response = await fetch(TRANSACTIONS_API_URL, {
