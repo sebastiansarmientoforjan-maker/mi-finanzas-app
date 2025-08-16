@@ -65,36 +65,62 @@
     </div>
     
     <div id="addTransactionModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>Añadir Nueva Transacción</h2>
-            <form id="transactionForm">
-                <label for="transactionAmount">Monto:</label>
-                <input type="number" id="transactionAmount" required>
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Añadir Nueva Transacción</h2>
+        <form id="transactionForm">
+            <label for="transactionType">Tipo:</label>
+            <select id="transactionType" required>
+                <option value="Ingreso">Ingreso</option>
+                <option value="Gasto">Gasto</option>
+            </select>
 
-                <label for="transactionDescription">Descripción:</label>
-                <input type="text" id="transactionDescription" required>
+            <label for="transactionAmount">Monto:</label>
+            <input type="number" id="transactionAmount" required>
 
-                <label for="transactionCategory">Categoría:</label>
-                <select id="transactionCategory" required>
-                    <option value="Gastos">Gastos</option>
-                    <option value="Ingresos">Ingresos</option>
+            <label for="transactionDescription">Descripción:</label>
+            <input type="text" id="transactionDescription" required>
+
+            <label for="transactionCategory">Categoría:</label>
+            <select id="transactionCategory" required>
+                <option value="Salario">Salario</option>
+                <option value="Ventas">Ventas</option>
+                <option value="Alquiler">Alquiler</option>
+                <option value="Inversiones">Inversiones</option>
+                <option value="Otros Ingresos">Otros Ingresos</option>
+                <option value="Comida">Comida</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Entretenimiento">Entretenimiento</option>
+                <option value="Facturas">Facturas</option>
+                <option value="Hogar">Hogar</option>
+                <option value="Compras">Compras</option>
+                <option value="Salud">Salud</option>
+                <option value="Otros Gastos">Otros Gastos</option>
+            </select>
+
+            <label for="transactionDate">Fecha:</label>
+            <input type="date" id="transactionDate" required>
+
+            <label for="transactionAccount">Cuenta:</label>
+            <select id="transactionAccount" required>
                 </select>
 
-                <label for="transactionDate">Fecha:</label>
-                <input type="date" id="transactionDate" required>
-                
-                <label for="transactionAccount">Cuenta:</label>
-                <select id="transactionAccount" required>
-                    </select>
+            <label for="transactionFrequency">Frecuencia:</label>
+            <select id="transactionFrequency" required>
+                <option value="One-time">Única vez</option>
+                <option value="Weekly">Semanal</option>
+                <option value="Bi-weekly">Quincenal</option>
+                <option value="Monthly">Mensual</option>
+            </select>
 
-                <button type="submit">Guardar Transacción</button>
-            </form>
-        </div>
+            <button type="submit">Guardar Transacción</button>
+        </form>
     </div>
-    <button id="showModalBtn" class="add-btn">+</button>
+</div>
+<button id="showModalBtn" class="add-btn">+</button>
 
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
+
