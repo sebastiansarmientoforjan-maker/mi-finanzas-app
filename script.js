@@ -1,5 +1,5 @@
 // REEMPLAZA ESTA URL CON LA URL DE TU API DE APPS SCRIPT
-const API_URL = 'https://script.google.com/macros/s/AKfycbwIVars0Km8K-qwjVBCdlvm7ppTBd0Du8adDTKDDB9DriKuM8GhOSNvuPse949P2cLnVg/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxVHRb2XBxYfHkMBPoHse6gzk7aZqb-g8dYHrOleDxfWrPU2_TAE6cYLDI2zh9hOl97AA/exec';
 
 // --- FUNCIONES CORE: OBTENER Y RENDERIZAR DATOS ---
 
@@ -206,4 +206,5 @@ document.getElementById('transactionForm').addEventListener('submit', async func
         alert('Error al añadir la transacción: ' + result.message);
     }
 });
+
 
