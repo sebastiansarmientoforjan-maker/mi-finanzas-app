@@ -1,75 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Dashboard Financiero</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Mi Finanzas App</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+      background: #f7f9fc;
+    }
+    h1 {
+      color: #333;
+    }
+    .transaction-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 8px 12px;
+      margin-bottom: 6px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .transaction-item span {
+      margin-right: 10px;
+    }
+    button {
+      margin-left: 5px;
+      padding: 4px 8px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .edit-btn { background: #ffcc00; }
+    .delete-btn { background: #ff4d4d; color: white; }
+    #new-transaction-form {
+      margin-top: 20px;
+      background: #fff;
+      padding: 12px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    #new-transaction-form input {
+      margin-right: 10px;
+      padding: 4px 6px;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Mi Dashboard Financiero</h1>
-        <p>© 2024 Mi Finanzas</p>
-    </header>
+  <h1>Mis Transacciones</h1>
 
-    <main class="dashboard-container">
-        <section id="accounts-container" class="section-card">
-            <h2>Cuentas</h2>
-            </section>
+  <div id="transactions-list"></div>
 
-        <section id="budget-container" class="section-card">
-            <h2>Presupuesto</h2>
-            </section>
+  <form id="new-transaction-form">
+    <input type="text" id="description" placeholder="Descripción" required>
+    <input type="number" id="amount" placeholder="Monto" required>
+    <button type="submit">Agregar</button>
+  </form>
 
-        <section id="transactions-container" class="section-card">
-            <h2>Transacciones Recientes</h2>
-            </section>
-
-        <section id="goals-container" class="section-card">
-            <h2>Objetivos Financieros</h2>
-            </section>
-
-        <section id="debts-container" class="section-card">
-            <h2>Deudas</h2>
-            </section>
-
-        <section id="investments-container" class="section-card">
-            <h2>Inversiones</h2>
-            </section>
-    </main>
-
-    <section id="add-transaction-section" class="form-container">
-        <h2>Añadir Nueva Transacción</h2>
-        <form id="add-transaction-form">
-            <label for="date">Fecha:</label>
-            <input type="date" id="date" required>
-
-            <label for="description">Descripción:</label>
-            <input type="text" id="description" required>
-
-            <label for="amount">Monto:</label>
-            <input type="number" id="amount" step="0.01" required>
-
-            <label for="account">Cuenta:</label>
-            <input type="text" id="account" required>
-            
-            <label for="category">Categoría:</label>
-            <input type="text" id="category" required>
-            
-            <label for="frequency">Periodicidad:</label>
-            <select id="frequency">
-                <option value="none">Sin periodicidad</option>
-                <option value="daily">Diario</option>
-                <option value="weekly">Semanal</option>
-                <option value="biweekly">Quincenal</option>
-                <option value="monthly">Mensual</option>
-                <option value="yearly">Anual</option>
-            </select>
-
-            <button type="submit">Guardar Transacción</button>
-        </form>
-    </section>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
+
