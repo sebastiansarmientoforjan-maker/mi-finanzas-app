@@ -127,24 +127,27 @@ async function renderDebts() {
 }
 
 // Función para renderizar las inversiones
-async function renderInvestments() {
-  const investmentsContainer = document.getElementById('investments-container');
-  investmentsContainer.innerHTML = '<h2>Inversiones</h2>';
+async function renderTransactions() {
+  const transactionsContainer = document.getElementById('transactions-container');
+  transactionsContainer.innerHTML = '<h2>Transacciones Recientes</h2>';
   try {
-    const investments = await fetchData('Investments');
-    investments.forEach(investment => {
-      const investmentDiv = document.createElement('div');
-      investmentDiv.className = 'investment-item';
-      investmentDiv.innerHTML = `
-        <h3>${investment.Name}</h3>
-        <p>Costo original: $${investment.OriginalCost}</p>
-        <p>Valor actual: $${investment.CurrentValue}</p>
+    const transactions = await fetchData('Transactions');
+    transactions.forEach(transaction => {
+      const transactionDiv = document.createElement('div');
+      transactionDiv.className = 'transaction-item';
+      transactionDiv.dataset.id = transaction.id; // Add Airtable record ID
+      transactionDiv.innerHTML = `
+        <p><strong>Fecha:</strong> ${transaction.Date}</p>
+        <p><strong>Descripción:</strong> ${transaction.Description}</p>
+        <p><strong>Monto:</strong> $${transaction.Amount}</p>
+        <button class="edit-btn">Editar</button>
+        <button class="delete-btn">Eliminar</button>
       `;
-      investmentsContainer.appendChild(investmentDiv);
+      transactionsContainer.appendChild(transactionDiv);
     });
   } catch (error) {
-    console.error('No se pudieron cargar las inversiones.');
-    investmentsContainer.innerHTML += '<p class="error-message">No se pudieron cargar las inversiones.</p>';
+    console.error('No se pudieron cargar las transacciones.');
+    transactionsContainer.innerHTML += '<p class="error-message">No se pudieron cargar las transacciones.</p>';
   }
 }
 
@@ -160,3 +163,4 @@ async function loadDashboard() {
 
 // Carga el dashboard cuando la página se carga
 document.addEventListener('DOMContentLoaded', loadDashboard);
+
