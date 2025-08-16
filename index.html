@@ -64,6 +64,36 @@
         </div>
     </div>
     
+    <div id="addTransactionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Añadir Nueva Transacción</h2>
+            <form id="transactionForm">
+                <label for="transactionAmount">Monto:</label>
+                <input type="number" id="transactionAmount" required>
+
+                <label for="transactionDescription">Descripción:</label>
+                <input type="text" id="transactionDescription" required>
+
+                <label for="transactionCategory">Categoría:</label>
+                <select id="transactionCategory" required>
+                    <option value="Gastos">Gastos</option>
+                    <option value="Ingresos">Ingresos</option>
+                </select>
+
+                <label for="transactionDate">Fecha:</label>
+                <input type="date" id="transactionDate" required>
+                
+                <label for="transactionAccount">Cuenta:</label>
+                <select id="transactionAccount" required>
+                    </select>
+
+                <button type="submit">Guardar Transacción</button>
+            </form>
+        </div>
+    </div>
+    <button id="showModalBtn" class="add-btn">+</button>
+
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
