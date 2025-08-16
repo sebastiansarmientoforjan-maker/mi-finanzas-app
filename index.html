@@ -1,42 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Finanzas</title>
+    <title>Mi Dashboard Financiero</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <header>
         <h1>Mi Dashboard Financiero</h1>
+        <p>© 2024 Mi Finanzas</p>
     </header>
 
-    <main>
-        <div id="accounts-container" class="dashboard-section">
-            </div>
+    <main class="dashboard-container">
+        <section id="accounts-container" class="section-card">
+            <h2>Cuentas</h2>
+            </section>
 
-        <div id="budget-container" class="dashboard-section">
-            </div>
+        <section id="budget-container" class="section-card">
+            <h2>Presupuesto</h2>
+            </section>
 
-        <div id="transactions-container" class="dashboard-section">
-            </div>
+        <section id="transactions-container" class="section-card">
+            <h2>Transacciones Recientes</h2>
+            </section>
 
-        <div id="goals-container" class="dashboard-section">
-            </div>
+        <section id="goals-container" class="section-card">
+            <h2>Objetivos Financieros</h2>
+            </section>
 
-        <div id="debts-container" class="dashboard-section">
-            </div>
+        <section id="debts-container" class="section-card">
+            <h2>Deudas</h2>
+            </section>
 
-        <div id="investments-container" class="dashboard-section">
-            </div>
+        <section id="investments-container" class="section-card">
+            <h2>Inversiones</h2>
+            </section>
     </main>
 
-    <footer>
-        <p>&copy; 2024 Mi Finanzas</p>
-    </footer>
+    <section id="add-transaction-section" class="form-container">
+        <h2>Añadir Nueva Transacción</h2>
+        <form id="add-transaction-form">
+            <label for="date">Fecha:</label>
+            <input type="date" id="date" required>
+
+            <label for="description">Descripción:</label>
+            <input type="text" id="description" required>
+
+            <label for="amount">Monto:</label>
+            <input type="number" id="amount" step="0.01" required>
+
+            <label for="account">Cuenta:</label>
+            <input type="text" id="account" required>
+
+            <label for="category">Categoría:</label>
+            <input type="text" id="category" required>
+
+            <button type="submit">Guardar Transacción</button>
+        </form>
+    </section>
 
     <script src="script.js"></script>
-
 </body>
 </html>
