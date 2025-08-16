@@ -34,6 +34,7 @@ export default async function handler(req, res) {
 
       case 'DELETE': // Delete a record
         const { id: deleteId } = req.body;
+        console.log("Attempting to delete record with ID:", deleteId); // This will appear in your Vercel logs
         const deleteResult = await table.destroy([deleteId]);
         return res.status(200).json({ status: 'success', data: deleteResult });
 
