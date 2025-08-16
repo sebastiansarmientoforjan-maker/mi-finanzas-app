@@ -124,7 +124,11 @@ async function renderInvestments() {
     const investments = await fetchData('Investments');
     investments.forEach(investment => {
       const investmentDiv = document.createElement('div');
-      investmentDiv.innerHTML = `<p>${investment['Name']}: $${investment['CurrentValue']}</p>`;
+      investmentDiv.innerHTML = `
+        <p>Nombre: ${investment.Name}</p>
+        <p>Costo Original: $${investment.OriginalCost}</p>
+        <p>Valor Actual: $${investment.CurrentValue}</p>
+      `;
       investmentsContainer.appendChild(investmentDiv);
     });
   } catch (error) {
