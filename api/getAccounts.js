@@ -1,6 +1,7 @@
+// api/getAccounts.js
 import Airtable from "airtable";
 
-// Initialize Airtable with your API key and base ID from environment variables
+// Inicializa Airtable con tu clave API y el ID de la base desde las variables de entorno
 const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
   process.env.AIRTABLE_BASE_ID
 );
@@ -17,10 +18,10 @@ export default async function handler(req, res) {
 
     const allRecords = [];
 
-    // Use Airtable's select method to fetch all records from the specified table
+    // Usa el método select de Airtable para buscar todos los registros de la tabla especificada
     await base(sheetName)
       .select({
-        view: "Grid view", // Use "Grid view" as the default view
+        view: "Grid view", // Usa "Grid view" como la vista por defecto
       })
       .eachPage((records, fetchNextPage) => {
         records.forEach((record) => {
