@@ -164,3 +164,63 @@ async function loadDashboard() {
 // Carga el dashboard cuando la página se carga
 document.addEventListener('DOMContentLoaded', loadDashboard);
 
+// Add Transaction Form Handling
+const transactionForm = document.getElementById('add-transaction-form');
+transactionForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const date = document.getElementById('date').value;
+  const description = document.getElementById('description').value;
+  const amount = parseFloat(document.getElementById('amount').value);
+  const account = document.getElementById('account').value;
+  const category = document.getElementById('category').value;
+
+  const newTransaction = { date, description, amount, account, category };
+
+  try {
+    const response = await fetch('/api/transactions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newTransaction),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add transaction.');
+    }
+    await loadDashboard(); // Reload data
+    transactionForm.reset();
+  } catch (error) {
+    console.error('Error adding transaction:', error);
+    alert('Error al guardar la transacción.');
+  }
+});
+
+// Edit and Delete Buttons Handling
+document.addEventListener('click', async (e) => {
+  if (e.target.classList.contains('delete-btn')) {
+    const transactionId = e.target.closest('.transaction-item').dataset.id;
+    if (confirm('¿Estás seguro de que quieres eliminar esta transacción?')) {
+      try {
+        const response = await fetch('/api/transactions', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: transactionId }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete transaction.');
+        }
+        await loadDashboard(); // Reload data
+      } catch (error) {
+        console.error('Error deleting transaction:', error);
+        alert('Error al eliminar la transacción.');
+      }
+    }
+  }
+  
+  // Edit functionality is more complex and will be added in a future step.
+  // For now, let's focus on the POST and DELETE methods.
+});
