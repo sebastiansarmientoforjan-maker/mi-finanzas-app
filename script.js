@@ -34,7 +34,7 @@ async function renderAccounts() {
       accountsContainer.appendChild(accountDiv);
     });
   } catch (error) {
-    console.error('No se pudieron cargar las cuentas.');
+    console.error('No se pudieron cargar las cuentas.', error);
     accountsContainer.innerHTML += '<p class="error-message">No se pudieron cargar las cuentas.</p>';
   }
 }
@@ -55,7 +55,7 @@ async function renderBudget() {
       budgetContainer.appendChild(budgetDiv);
     });
   } catch (error) {
-    console.error('No se pudo cargar el presupuesto.');
+    console.error('No se pudo cargar el presupuesto.', error);
     budgetContainer.innerHTML += '<p class="error-message">No se pudo cargar el presupuesto.</p>';
   }
 }
@@ -103,7 +103,7 @@ async function renderGoals() {
       goalsContainer.appendChild(goalDiv);
     });
   } catch (error) {
-    console.error('No se pudieron cargar los objetivos.');
+    console.error('No se pudieron cargar los objetivos.', error);
     goalsContainer.innerHTML += '<p class="error-message">No se pudieron cargar los objetivos.</p>';
   }
 }
@@ -126,7 +126,7 @@ async function renderDebts() {
       debtsContainer.appendChild(debtDiv);
     });
   } catch (error) {
-    console.error('No se pudieron cargar las deudas.');
+    console.error('No se pudieron cargar las deudas.', error);
     debtsContainer.innerHTML += '<p class="error-message">No se pudieron cargar las deudas.</p>';
   }
 }
@@ -148,7 +148,7 @@ async function renderInvestments() {
       investmentsContainer.appendChild(investmentDiv);
     });
   } catch (error) {
-    console.error('No se pudieron cargar las inversiones.');
+    console.error('No se pudieron cargar las inversiones.', error);
     investmentsContainer.innerHTML += '<p class="error-message">No se pudieron cargar las inversiones.</p>';
   }
 }
