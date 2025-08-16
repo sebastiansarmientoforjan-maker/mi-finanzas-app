@@ -1,203 +1,57 @@
 body {
+    font-family: Arial, sans-serif;
     background-color: #f0f2f5;
-    font-family: 'Montserrat', sans-serif;
     color: #333;
     margin: 0;
     padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
 }
 
-.container {
-    max-width: 900px;
-    width: 100%;
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
 
 header {
-    grid-column: 1 / -1;
-    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
-}
-
-.title {
-    color: #2c3e50;
-    font-weight: 700;
-}
-
-.card {
-    background-color: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.card-title {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #34495e;
-    font-weight: 600;
-    border-bottom: 2px solid #ecf0f1;
-    padding-bottom: 10px;
-}
-
-.main-balance {
-    grid-column: 1 / -1;
-    text-align: center;
-}
-
-.balance-amount {
-    font-size: 3em;
-    font-weight: 700;
-    color: #27ae60;
-    margin: 10px 0;
-}
-
-.accounts-summary {
     display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 15px;
-    font-size: 0.9em;
-    color: #555;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.module .card-title {
-    border: none;
-    padding-bottom: 0;
+.section-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.budget-progress-bar {
-    background-color: #e0e0e0;
-    border-radius: 10px;
-    height: 15px;
-    overflow: hidden;
+h1, h2, h3 {
+    color: #2c3e50;
+    margin-top: 0;
+}
+
+p {
+    margin: 5px 0;
+}
+
+.account-card, .transaction-item, .goal-item, .debt-item, .investment-item {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
     margin-bottom: 10px;
 }
 
-.progress {
-    background-color: #3498db;
-    height: 100%;
-    transition: width 0.5s ease-in-out;
+.account-card:last-child, .transaction-item:last-child, .goal-item:last-child, .debt-item:last-child, .investment-item:last-child {
+    border-bottom: none;
 }
 
-.budget-info {
-    text-align: right;
-    font-weight: 600;
-    color: #555;
-}
-
-.transaction-list, .debt-list, .goal-list, .investment-list {
-    font-size: 0.9em;
-    color: #555;
-}
-
-.transaction-list p, .debt-list p, .goal-list p, .investment-list p {
-    border-bottom: 1px solid #ecf0f1;
-    padding: 8px 0;
-    margin: 0;
-}
-
-/* Estilos para el botón de agregar */
-.add-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: #27ae60;
-    color: white;
-    font-size: 2em;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s;
-    z-index: 100;
-}
-
-.add-btn:hover {
-    background-color: #229954;
-}
-
-/* Estilos para el modal (ventana emergente) */
-.modal {
-    display: none; /* Oculto por defecto */
-    position: fixed;
-    z-index: 200;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    width: 80%;
-    max-width: 500px;
-    position: relative;
-    animation-name: animatetop;
-    animation-duration: 0.4s
-}
-
-@keyframes animatetop {
-    from {top: -300px; opacity: 0}
-    to {top: 0; opacity: 1}
-}
-
-.close-btn {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
+.error-message {
+    color: #e74c3c;
     font-weight: bold;
-}
-
-.close-btn:hover,
-.close-btn:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Estilos para el formulario dentro del modal */
-#transactionForm {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-#transactionForm label {
-    font-weight: 600;
-    color: #555;
-}
-
-#transactionForm input, #transactionForm select, #transactionForm button {
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    font-family: 'Montserrat', sans-serif;
-}
-
-#transactionForm button {
-    background-color: #3498db;
-    color: white;
-    font-weight: 700;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#transactionForm button:hover {
-    background-color: #2980b9;
 }
