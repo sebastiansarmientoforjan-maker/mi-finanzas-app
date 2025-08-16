@@ -194,16 +194,15 @@ document.getElementById('transactionForm').addEventListener('submit', async func
     const response = await fetch(API_URL, {
         method: 'POST',
         body: JSON.stringify({ endpoint: 'addEntry', payload: { sheetName: 'Transactions', data: payload } }),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'text/plain' } // <--- ¡AQUÍ ESTÁ EL CAMBIO CLAVE!
     });
 
     const result = await response.json();
     if (result.status === 'success') {
         alert('Transacción añadida con éxito!');
         modal.style.display = "none";
-        loadDashboard(); // Recarga el dashboard para mostrar la nueva transacción
+        loadDashboard();
     } else {
         alert('Error al añadir la transacción: ' + result.message);
     }
 });
-
