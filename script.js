@@ -158,21 +158,23 @@ window.onclick = function(event) {
 // Lógica para enviar el formulario
 document.getElementById('transactionForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    
+
+    const type = document.getElementById('transactionType').value;
     const amount = parseFloat(document.getElementById('transactionAmount').value);
     const description = document.getElementById('transactionDescription').value;
     const category = document.getElementById('transactionCategory').value;
     const date = document.getElementById('transactionDate').value;
     const accountID = document.getElementById('transactionAccount').value;
-    
+    const frequency = document.getElementById('transactionFrequency').value;
+
     const payload = {
         'ID': new Date().getTime(),
-        'Type': 'Gasto',
+        'Type': type,
         'Category': category,
         'Description': description,
         'Amount': amount,
         'Date': date,
-        'Frequency': 'One-time',
+        'Frequency': frequency,
         'Status': 'Active',
         'LastRecurrenceDate': '',
         'Account': accountID
@@ -193,4 +195,3 @@ document.getElementById('transactionForm').addEventListener('submit', async func
         alert('Error al añadir la transacción: ' + result.message);
     }
 });
-
