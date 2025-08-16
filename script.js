@@ -1,35 +1,52 @@
 const TRANSACTIONS_API_URL = '/api/transactions';
 
-// Cargar y renderizar el dashboard
+// Calcular totales y balance
+function calculateTotals(transactions) {
+  let income = 0, expense = 0;
+  transactions.forEach(tx => {
+    const amount = parseFloat(tx.Amount) || 0;
+    if (amount >= 0) income += amount;
+    else expense += amount;
+  });
+  const balance = income + expense; // expense es negativo
+  document.getElementById('total-income').textContent = income.toFixed(2);
+  document.getElementById('total-expense').textContent = Math.abs(expense).toFixed(2);
+  document.getElementById('balance').textContent = balance.toFixed(2);
+}
+
+// Renderizar transacciones
+function renderTransactions(transactions) {
+  const listContainer = document.getElementById('transactions-list');
+  listContainer.innerHTML = '';
+  transactions.forEach(tx => {
+    const item = document.createElement('div');
+    item.classList.add('transaction-item');
+    item.dataset.id = tx.id;
+    item.innerHTML = `
+      <span>${tx.Description || 'Sin descripción'}</span>
+      <span>${tx.Amount || 0}</span>
+      <button class="edit-btn">Editar</button>
+      <button class="delete-btn">Eliminar</button>
+    `;
+    listContainer.appendChild(item);
+  });
+}
+
+// Cargar dashboard
 async function loadDashboard() {
   try {
     const response = await fetch(TRANSACTIONS_API_URL);
     const result = await response.json();
-
     console.log("Transacciones cargadas:", result);
-
-    const listContainer = document.getElementById('transactions-list');
-    listContainer.innerHTML = '';
-
-    result.data.forEach(tx => {
-      const item = document.createElement('div');
-      item.classList.add('transaction-item');
-      item.dataset.id = tx.id; // Airtable record ID
-      item.innerHTML = `
-        <span>${tx.Description || 'Sin descripción'}</span>
-        <span>${tx.Amount || 0}</span>
-        <button class="edit-btn">Editar</button>
-        <button class="delete-btn">Eliminar</button>
-      `;
-      listContainer.appendChild(item);
-    });
-
+    const transactions = result.data || [];
+    calculateTotals(transactions);
+    renderTransactions(transactions);
   } catch (error) {
     console.error("Error al cargar transacciones:", error);
   }
 }
 
-// Crear una nueva transacción
+// Crear transacción
 async function createTransaction(fields) {
   try {
     const response = await fetch(TRANSACTIONS_API_URL, {
@@ -37,9 +54,7 @@ async function createTransaction(fields) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ fields }),
     });
-
     if (!response.ok) throw new Error('Failed to create transaction.');
-
     await loadDashboard();
   } catch (error) {
     console.error('Error creating transaction:', error);
@@ -47,66 +62,51 @@ async function createTransaction(fields) {
   }
 }
 
-// Manejo de eventos global (Editar / Eliminar)
+// Editar y eliminar
 document.addEventListener('click', async (e) => {
+  const txItem = e.target.closest('.transaction-item');
+  if (!txItem) return;
+  const transactionId = txItem.dataset.id;
+
   // Eliminar
   if (e.target.classList.contains('delete-btn')) {
-    const transactionId = e.target.closest('.transaction-item').dataset.id;
-    console.log("Deleting transactionId:", transactionId);
-
-    if (confirm('¿Estás seguro de que quieres eliminar esta transacción?')) {
-      try {
-        const response = await fetch(`${TRANSACTIONS_API_URL}?id=${transactionId}`, {
-          method: 'DELETE',
-        });
-
-        if (!response.ok) throw new Error('Failed to delete transaction.');
-
-        await loadDashboard();
-      } catch (error) {
-        console.error('Error deleting transaction:', error);
-        alert('Error al eliminar la transacción.');
-      }
+    if (!confirm('¿Seguro que quieres eliminar esta transacción?')) return;
+    try {
+      const response = await fetch(`${TRANSACTIONS_API_URL}?id=${transactionId}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Failed to delete transaction.');
+      await loadDashboard();
+    } catch (error) {
+      console.error('Error deleting transaction:', error);
+      alert('Error al eliminar la transacción.');
     }
   }
 
   // Editar
   if (e.target.classList.contains('edit-btn')) {
-    const transactionId = e.target.closest('.transaction-item').dataset.id;
     const newDescription = prompt('Nueva descripción:');
-    if (newDescription) {
-      try {
-        const response = await fetch(TRANSACTIONS_API_URL, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: transactionId, fields: { Description: newDescription } }),
-        });
-
-        if (!response.ok) throw new Error('Failed to update transaction.');
-
-        await loadDashboard();
-      } catch (error) {
-        console.error('Error updating transaction:', error);
-        alert('Error al actualizar la transacción.');
-      }
+    if (!newDescription) return;
+    try {
+      const response = await fetch(TRANSACTIONS_API_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: transactionId, fields: { Description: newDescription } }),
+      });
+      if (!response.ok) throw new Error('Failed to update transaction.');
+      await loadDashboard();
+    } catch (error) {
+      console.error('Error updating transaction:', error);
+      alert('Error al actualizar la transacción.');
     }
   }
 });
 
-// Manejo del formulario de nueva transacción
+// Formulario nuevo
 document.getElementById('new-transaction-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-
   const description = document.getElementById('description').value;
   const amount = parseFloat(document.getElementById('amount').value);
-
-  if (!description || isNaN(amount)) {
-    alert('Por favor completa todos los campos.');
-    return;
-  }
-
+  if (!description || isNaN(amount)) return alert('Completa todos los campos.');
   await createTransaction({ Description: description, Amount: amount });
-
   e.target.reset();
 });
 
