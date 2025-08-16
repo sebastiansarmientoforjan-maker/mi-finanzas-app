@@ -1,246 +1,137 @@
-// --- CORRECCIÓN CLAVE ---
-// La URL del proxy debe incluir la ruta /api para que Vercel la intercepte
-const PROXY_URL = 'https://mi-finanzas-app-nine.vercel.app/api'; 
-// --- FIN CORRECCIÓN ---
+// Variable para la URL base de tu API en Vercel.
+// Tu front-end se comunica con este endpoint para todas las operaciones.
+const apiBaseUrl = 'https://mi-finanzas-app-nine.vercel.app/api';
 
-// --- FUNCIONES CORE: OBTENER Y ENVIAR DATOS ---
-
-// Función para obtener y enviar datos
-async function fetchData(endpoint, method = 'GET', payload = null) {
-    const options = {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    };
-
-    if (payload) {
-        options.body = JSON.stringify(payload);
-    }
-
-    try {
-        // Construye la URL para que el proxy de Vercel la intercepte
-        const url = `${PROXY_URL}?endpoint=${endpoint}`;
-        const response = await fetch(url, options);
-        const data = await response.json();
-        if (data.status === 'success') {
-            return data.data || data; 
-        } else {
-            console.error(`Error en la operación ${endpoint}:`, data.message);
-            return { status: 'error', message: data.message };
-        }
-    } catch (error) {
-        console.error(`Error de red en la operación ${endpoint}:`, error);
-        return { status: 'error', message: 'Error de red.' };
-    }
-}
-
-// --- FUNCIONES PARA RENDERIZAR LA INTERFAZ ---
-
-// Función para renderizar el resumen de cuentas
-async function renderAccounts() {
-    const accounts = await fetchData('getAccounts');
-    const accountsSummary = document.getElementById('accountsSummary');
-    accountsSummary.innerHTML = '';
-    let totalBalance = 0;
-
-    if (accounts.status === 'error' || !Array.isArray(accounts)) {
-        console.error("No se pudieron cargar las cuentas.");
-        return;
-    }
-
-    accounts.forEach(account => {
-        const p = document.createElement('p');
-        p.textContent = `${account['Account Name']}: $${account['Current Balance'].toFixed(2)}`;
-        accountsSummary.appendChild(p);
-        totalBalance += account['Current Balance'];
-    });
-
-    document.getElementById('netBalance').textContent = totalBalance.toFixed(2);
-}
-
-// Función para renderizar el presupuesto
-async function renderBudget() {
-    const budget = await fetchData('getBudget');
-    if (budget.status === 'error' || !Array.isArray(budget) || budget.length === 0) {
-        console.error("No se pudo cargar el presupuesto.");
-        return;
-    }
-    
-    const monthlyBudget = budget[0].MonthlyBudget;
-    const spent = budget[0].SpentThisMonth;
-    
-    const progressPercent = (spent / monthlyBudget) * 100;
-
-    document.getElementById('budgetAmount').textContent = monthlyBudget.toFixed(2);
-    document.getElementById('spentAmount').textContent = spent.toFixed(2);
-    document.getElementById('budgetProgress').style.width = `${progressPercent}%`;
-}
-
-// Función para renderizar la lista de transacciones
-async function renderTransactions() {
-    const transactions = await fetchData('getTransactions');
-    const transactionList = document.getElementById('transactionList');
-    transactionList.innerHTML = '';
-
-    if (transactions.status === 'error' || !Array.isArray(transactions)) {
-        console.error("No se pudieron cargar las transacciones.");
-        return;
-    }
-
-    transactions.slice(0, 5).forEach(trans => {
-        const p = document.createElement('p');
-        p.textContent = `${trans.Date} - ${trans.Description}: $${trans.Amount.toFixed(2)}`;
-        transactionList.appendChild(p);
-    });
-}
-
-// Función para renderizar los objetivos
-async function renderGoals() {
-    const goals = await fetchData('getGoals');
-    const goalList = document.getElementById('goalList');
-    goalList.innerHTML = '';
-
-    if (goals.status === 'error' || !Array.isArray(goals)) {
-        console.error("No se pudieron cargar los objetivos.");
-        return;
-    }
-
-    goals.forEach(goal => {
-        const progress = (goal.CurrentAmount / goal.TargetAmount) * 100;
-        const p = document.createElement('p');
-        p.textContent = `${goal.Name}: ${progress.toFixed(0)}% completado`;
-        goalList.appendChild(p);
-    });
-}
-
-// Función para renderizar las deudas
-async function renderDebts() {
-    const debts = await fetchData('getDebts');
-    const debtList = document.getElementById('debtList');
-    debtList.innerHTML = '';
-
-    if (debts.status === 'error' || !Array.isArray(debts)) {
-        console.error("No se pudieron cargar las deudas.");
-        return;
-    }
-
-    debts.forEach(debt => {
-        const p = document.createElement('p');
-        p.textContent = `${debt.Creditor}: $${debt.RemainingBalance.toFixed(2)}`;
-        debtList.appendChild(p);
-    });
-}
-
-// Función para renderizar las inversiones
-async function renderInvestments() {
-    const investments = await fetchData('getInvestments');
-    const investmentList = document.getElementById('investmentList');
-    investmentList.innerHTML = '';
-
-    if (investments.status === 'error' || !Array.isArray(investments)) {
-        console.error("No se pudieron cargar las inversiones.");
-        return;
-    }
-
-    investments.forEach(inv => {
-        const p = document.createElement('p');
-        p.textContent = `${inv.Name}: $${inv.CurrentValue.toFixed(2)}`;
-        investmentList.appendChild(p);
-    });
-}
-
-// Función principal para cargar todos los datos al iniciar la página
+// Función para inicializar el panel de control.
 async function loadDashboard() {
-    await renderAccounts();
-    await renderBudget();
-    await renderTransactions();
-    await renderGoals();
-    await renderDebts();
-    await renderInvestments();
+  await renderAccounts();
+  await renderBudget();
+  await renderTransactions();
+  await renderGoals();
+  await renderDebts();
+  await renderInvestments();
 }
 
-// Llamar a la función principal cuando la página se carga
+// Función principal para obtener datos de la API.
+// Ahora usa un parámetro para la hoja y envía el nombre de la hoja como un query parameter.
+async function fetchData(sheetName) {
+  try {
+    const response = await fetch(`${apiBaseUrl}/getAccounts?sheetName=${sheetName}`);
+    if (!response.ok) {
+      throw new Error(`Error de red en la operación ${sheetName}: ${response.statusText}`);
+    }
+    const data = await response.json();
+    if (data.status === 'success') {
+      return data.data;
+    } else {
+      throw new Error(`Error en la operación ${sheetName}: ${data.message}`);
+    }
+  } catch (error) {
+    console.error(`Error de red en la operación ${sheetName}:`, error);
+    throw error;
+  }
+}
+
+// Funciones para renderizar cada sección del dashboard.
+async function renderAccounts() {
+  const accountsContainer = document.getElementById('accounts-container');
+  accountsContainer.innerHTML = '<h2>Cuentas</h2>';
+  try {
+    const accounts = await fetchData('Accounts');
+    accounts.forEach(account => {
+      const accountDiv = document.createElement('div');
+      accountDiv.className = 'account-card';
+      accountDiv.innerHTML = `
+        <h3>${account['Account Name']}</h3>
+        <p>Balance: $${account['Current Balance']}</p>
+      `;
+      accountsContainer.appendChild(accountDiv);
+    });
+  } catch (error) {
+    console.error('No se pudieron cargar las cuentas.');
+    accountsContainer.innerHTML += '<p class="error-message">No se pudieron cargar las cuentas.</p>';
+  }
+}
+
+async function renderBudget() {
+  const budgetContainer = document.getElementById('budget-container');
+  budgetContainer.innerHTML = '<h2>Presupuesto</h2>';
+  try {
+    const budget = await fetchData('Budget');
+    budget.forEach(item => {
+      const budgetDiv = document.createElement('div');
+      budgetDiv.innerHTML = `<p>${item['BudgetCategory']}: $${item['MonthlyBudget']}</p>`;
+      budgetContainer.appendChild(budgetDiv);
+    });
+  } catch (error) {
+    console.error('No se pudo cargar el presupuesto.');
+    budgetContainer.innerHTML += '<p class="error-message">No se pudo cargar el presupuesto.</p>';
+  }
+}
+
+async function renderTransactions() {
+  const transactionsContainer = document.getElementById('transactions-container');
+  transactionsContainer.innerHTML = '<h2>Transacciones Recientes</h2>';
+  try {
+    const transactions = await fetchData('Transactions');
+    transactions.slice(0, 5).forEach(transaction => {
+      const transactionDiv = document.createElement('div');
+      transactionDiv.innerHTML = `<p>${transaction['Description']} - $${transaction['Amount']}</p>`;
+      transactionsContainer.appendChild(transactionDiv);
+    });
+  } catch (error) {
+    console.error('No se pudieron cargar las transacciones.');
+    transactionsContainer.innerHTML += '<p class="error-message">No se pudieron cargar las transacciones.</p>';
+  }
+}
+
+async function renderGoals() {
+  const goalsContainer = document.getElementById('goals-container');
+  goalsContainer.innerHTML = '<h2>Objetivos Financieros</h2>';
+  try {
+    const goals = await fetchData('Goals');
+    goals.forEach(goal => {
+      const goalDiv = document.createElement('div');
+      goalDiv.innerHTML = `<p>${goal['Name']}: $${goal['CurrentAmount']} / $${goal['TargetAmount']}</p>`;
+      goalsContainer.appendChild(goalDiv);
+    });
+  } catch (error) {
+    console.error('No se pudieron cargar los objetivos.');
+    goalsContainer.innerHTML += '<p class="error-message">No se pudieron cargar los objetivos.</p>';
+  }
+}
+
+async function renderDebts() {
+  const debtsContainer = document.getElementById('debts-container');
+  debtsContainer.innerHTML = '<h2>Deudas</h2>';
+  try {
+    const debts = await fetchData('Debts');
+    debts.forEach(debt => {
+      const debtDiv = document.createElement('div');
+      debtDiv.innerHTML = `<p>${debt['Creditor']}: $${debt['RemainingBalance']}</p>`;
+      debtsContainer.appendChild(debtDiv);
+    });
+  } catch (error) {
+    console.error('No se pudieron cargar las deudas.');
+    debtsContainer.innerHTML += '<p class="error-message">No se pudieron cargar las deudas.</p>';
+  }
+}
+
+async function renderInvestments() {
+  const investmentsContainer = document.getElementById('investments-container');
+  investmentsContainer.innerHTML = '<h2>Inversiones</h2>';
+  try {
+    const investments = await fetchData('Investments');
+    investments.forEach(investment => {
+      const investmentDiv = document.createElement('div');
+      investmentDiv.innerHTML = `<p>${investment['Name']}: $${investment['CurrentValue']}</p>`;
+      investmentsContainer.appendChild(investmentDiv);
+    });
+  } catch (error) {
+    console.error('No se pudieron cargar las inversiones.');
+    investmentsContainer.innerHTML += '<p class="error-message">No se pudieron cargar las inversiones.</p>';
+  }
+}
+
+// Iniciar la carga del dashboard cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', loadDashboard);
-
-
-// --- NUEVAS FUNCIONES PARA LA FASE 2A: INTERACCIÓN ---
-
-// Llenar el dropdown de Cuentas en el formulario
-async function fillAccountDropdown() {
-    const accounts = await fetchData('getAccounts');
-
-    if (accounts.status === 'error' || !Array.isArray(accounts)) {
-        console.error("No se pudieron cargar las cuentas para el dropdown.");
-        return;
-    }
-
-    const accountDropdown = document.getElementById('transactionAccount');
-    accountDropdown.innerHTML = ''; // Limpiar opciones anteriores
-    accounts.forEach(account => {
-        const option = document.createElement('option');
-        option.value = account['Account ID'];
-        option.textContent = account['Account Name'];
-        accountDropdown.appendChild(option);
-    });
-}
-
-// Lógica para mostrar/ocultar el modal
-const modal = document.getElementById('addTransactionModal');
-const showModalBtn = document.getElementById('showModalBtn');
-const closeBtn = document.querySelector('.close-btn');
-
-showModalBtn.onclick = function() {
-    modal.style.display = "block";
-    fillAccountDropdown();
-}
-
-closeBtn.onclick = function() {
-    modal.style.display = "none";
-}
-
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-
-// Lógica para enviar el formulario
-document.getElementById('transactionForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const type = document.getElementById('transactionType').value;
-    const amount = parseFloat(document.getElementById('transactionAmount').value);
-    const description = document.getElementById('transactionDescription').value;
-    const category = document.getElementById('transactionCategory').value;
-    const date = document.getElementById('transactionDate').value;
-    const accountID = document.getElementById('transactionAccount').value;
-    const frequency = document.getElementById('transactionFrequency').value;
-
-    const payload = {
-        'ID': new Date().getTime(),
-        'Type': type,
-        'Category': category,
-        'Description': description,
-        'Amount': amount,
-        'Date': date,
-        'Frequency': frequency,
-        'Status': 'Active',
-        'LastRecurrenceDate': '',
-        'Account': accountID
-    };
-
-    const result = await fetchData('addEntry', 'POST', { sheetName: 'Transactions', data: payload });
-
-    if (result.status === 'success') {
-        alert('Transacción añadida con éxito!');
-        modal.style.display = "none";
-        loadDashboard(); // Recarga el dashboard para mostrar la nueva transacción
-    } else {
-        alert('Error al añadir la transacción: ' + result.message);
-    }
-});
-
-
-
-
