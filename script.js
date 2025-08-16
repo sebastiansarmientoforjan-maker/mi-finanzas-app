@@ -80,7 +80,7 @@ async function renderTransactions() {
       transactionsContainer.appendChild(transactionDiv);
     });
   } catch (error) {
-    console.error('No se pudieron cargar las transacciones.');
+    console.error('No se pudieron cargar las transacciones.', error);
     transactionsContainer.innerHTML += '<p class="error-message">No se pudieron cargar las transacciones.</p>';
   }
 }
