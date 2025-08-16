@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Futuro Financiero</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">Tu Futuro Financiero</h1>
+        </header>
+
+        <div class="card main-balance">
+            <h2 class="card-title">Saldo Neto</h2>
+            <p class="balance-amount">$<span id="netBalance">0.00</span></p>
+            <div class="accounts-summary" id="accountsSummary">
+                </div>
+        </div>
+
+        <div class="card module">
+            <h2 class="card-title">Presupuesto Mensual</h2>
+            <div class="budget-progress-bar">
+                <div class="progress" id="budgetProgress"></div>
+            </div>
+            <p class="budget-info"><span id="spentAmount">0.00</span> / <span id="budgetAmount">0.00</span></p>
+        </div>
+
+        <div class="card module">
+            <h2 class="card-title">Transacciones Recientes</h2>
+            <div class="transaction-list" id="transactionList">
+                </div>
+        </div>
+
+        <div class="card module">
+            <h2 class="card-title">Control de Deudas</h2>
+            <div class="debt-list" id="debtList">
+                </div>
+        </div>
+
+        <div class="card module">
+            <h2 class="card-title">Progreso de Objetivos</h2>
+            <div class="goal-list" id="goalList">
+                </div>
+        </div>
+
+        <div class="card module">
+            <h2 class="card-title">Proyecciones a Futuro</h2>
+            <canvas id="projectionChart"></canvas>
+        </div>
+
+        <div class="card module">
+            <h2 class="card-title">Resumen de Inversiones</h2>
+            <div class="investment-list" id="investmentList">
+                </div>
+        </div>
+
+        <div class="card module">
+            <h2 class="card-title">Próxima Reunión</h2>
+            <p id="meetingDate">--/--/----</p>
+            <button class="generate-report-btn" id="generateReportBtn">Generar Reporte PDF</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
