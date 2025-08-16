@@ -194,12 +194,8 @@ document.addEventListener('click', async (e) => {
     const transactionId = e.target.closest('.transaction-item').dataset.id;
     if (confirm('¿Estás seguro de que quieres eliminar esta transacción?')) {
       try {
-        const response = await fetch(TRANSACTIONS_API_URL, {
+        const response = await fetch(`${TRANSACTIONS_API_URL}?id=${transactionId}`, {
           method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ id: transactionId }),
         });
 
         if (!response.ok) {
