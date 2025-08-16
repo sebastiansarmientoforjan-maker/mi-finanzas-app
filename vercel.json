@@ -1,8 +1,12 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://script.google.com/macros/s/AKfycbxFV1BOXpz8aEV8Yu_pFvlVY2_dX8X8tIz_f7H4CsrC5X0s11a9jSTGvsBQIPXLaHPCUA/exec"
+      "source": "/api",
+      "destination": "https://script.google.com/macros/s/AKfycbxpbQmqxnxx1yD9_O9aiRTH4LIZUCEayiMyS-duzwQkKfMMXQY0Kdj5vt4zIpQRFxw/exec"
+    },
+    {
+      "source": "/api/",
+      "destination": "https://script.google.com/macros/s/AKfycbxpbQmqxnxx1yD9_O9aiRTH4LIZUCEayiMyS-duzwQkKfMMXQY0Kdj5vt4zIpQRFxw/exec"
     }
   ]
 }
