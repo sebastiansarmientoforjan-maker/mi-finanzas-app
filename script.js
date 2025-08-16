@@ -1,38 +1,21 @@
-// Variable para la URL base de tu API en Vercel.
-// Tu front-end se comunica con este endpoint para todas las operaciones.
-const apiBaseUrl = 'https://mi-finanzas-app-nine.vercel.app/api';
+// script.js
 
-// Función para inicializar el panel de control.
-async function loadDashboard() {
-  await renderAccounts();
-  await renderBudget();
-  await renderTransactions();
-  await renderGoals();
-  await renderDebts();
-  await renderInvestments();
-}
+const API_URL = '/api/getAccounts';
 
-// Función principal para obtener datos de la API.
-// Ahora usa un parámetro para la hoja y envía el nombre de la hoja como un query parameter.
+// Función para obtener datos de la API
 async function fetchData(sheetName) {
-  try {
-    const response = await fetch(`${apiBaseUrl}/getAccounts?sheetName=${sheetName}`);
-    if (!response.ok) {
-      throw new Error(`Error de red en la operación ${sheetName}: ${response.statusText}`);
-    }
-    const data = await response.json();
-    if (data.status === 'success') {
-      return data.data;
-    } else {
-      throw new Error(`Error en la operación ${sheetName}: ${data.message}`);
-    }
-  } catch (error) {
-    console.error(`Error de red en la operación ${sheetName}:`, error);
-    throw error;
+  const response = await fetch(`${API_URL}?sheetName=${sheetName}`);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
+  const result = await response.json();
+  if (result.status === 'error') {
+    throw new Error(result.message);
+  }
+  return result.data;
 }
 
-// Funciones para renderizar cada sección del dashboard.
+// Función para renderizar las cuentas
 async function renderAccounts() {
   const accountsContainer = document.getElementById('accounts-container');
   accountsContainer.innerHTML = '<h2>Cuentas</h2>';
@@ -43,6 +26,7 @@ async function renderAccounts() {
       accountDiv.className = 'account-card';
       accountDiv.innerHTML = `
         <h3>${account['Account Name']}</h3>
+        <p>ID: ${account['Account ID']}</p>
         <p>Balance: $${account['Current Balance']}</p>
       `;
       accountsContainer.appendChild(accountDiv);
@@ -53,6 +37,7 @@ async function renderAccounts() {
   }
 }
 
+// Función para renderizar el presupuesto
 async function renderBudget() {
   const budgetContainer = document.getElementById('budget-container');
   budgetContainer.innerHTML = '<h2>Presupuesto</h2>';
@@ -60,7 +45,11 @@ async function renderBudget() {
     const budget = await fetchData('Budget');
     budget.forEach(item => {
       const budgetDiv = document.createElement('div');
-      budgetDiv.innerHTML = `<p>${item['BudgetCategory']}: $${item['MonthlyBudget']}</p>`;
+      budgetDiv.className = 'budget-item';
+      budgetDiv.innerHTML = `
+        <h3>${item.BudgetCategory}</h3>
+        <p>Presupuesto mensual: $${item.MonthlyBudget}</p>
+      `;
       budgetContainer.appendChild(budgetDiv);
     });
   } catch (error) {
@@ -69,14 +58,20 @@ async function renderBudget() {
   }
 }
 
+// Función para renderizar transacciones
 async function renderTransactions() {
   const transactionsContainer = document.getElementById('transactions-container');
   transactionsContainer.innerHTML = '<h2>Transacciones Recientes</h2>';
   try {
     const transactions = await fetchData('Transactions');
-    transactions.slice(0, 5).forEach(transaction => {
+    transactions.forEach(transaction => {
       const transactionDiv = document.createElement('div');
-      transactionDiv.innerHTML = `<p>${transaction['Description']} - $${transaction['Amount']}</p>`;
+      transactionDiv.className = 'transaction-item';
+      transactionDiv.innerHTML = `
+        <p><strong>Fecha:</strong> ${transaction.Date}</p>
+        <p><strong>Descripción:</strong> ${transaction.Description}</p>
+        <p><strong>Monto:</strong> $${transaction.Amount}</p>
+      `;
       transactionsContainer.appendChild(transactionDiv);
     });
   } catch (error) {
@@ -85,6 +80,7 @@ async function renderTransactions() {
   }
 }
 
+// Función para renderizar los objetivos
 async function renderGoals() {
   const goalsContainer = document.getElementById('goals-container');
   goalsContainer.innerHTML = '<h2>Objetivos Financieros</h2>';
@@ -92,7 +88,13 @@ async function renderGoals() {
     const goals = await fetchData('Goals');
     goals.forEach(goal => {
       const goalDiv = document.createElement('div');
-      goalDiv.innerHTML = `<p>${goal['Name']}: $${goal['CurrentAmount']} / $${goal['TargetAmount']}</p>`;
+      goalDiv.className = 'goal-item';
+      goalDiv.innerHTML = `
+        <h3>${goal.Name}</h3>
+        <p>Cantidad actual: $${goal.CurrentAmount}</p>
+        <p>Cantidad objetivo: $${goal.TargetAmount}</p>
+        <p>Fecha límite: ${goal.DueDate}</p>
+      `;
       goalsContainer.appendChild(goalDiv);
     });
   } catch (error) {
@@ -101,6 +103,7 @@ async function renderGoals() {
   }
 }
 
+// Función para renderizar las deudas
 async function renderDebts() {
   const debtsContainer = document.getElementById('debts-container');
   debtsContainer.innerHTML = '<h2>Deudas</h2>';
@@ -108,7 +111,13 @@ async function renderDebts() {
     const debts = await fetchData('Debts');
     debts.forEach(debt => {
       const debtDiv = document.createElement('div');
-      debtDiv.innerHTML = `<p>${debt['Creditor']}: $${debt['RemainingBalance']}</p>`;
+      debtDiv.className = 'debt-item';
+      debtDiv.innerHTML = `
+        <h3>${debt.Creditor}</h3>
+        <p>Saldo restante: $${debt.RemainingBalance}</p>
+        <p>Tasa de interés: ${debt.InterestRate}%</p>
+        <p>Pago mínimo: $${debt.MinimumPayment}</p>
+      `;
       debtsContainer.appendChild(debtDiv);
     });
   } catch (error) {
@@ -117,6 +126,7 @@ async function renderDebts() {
   }
 }
 
+// Función para renderizar las inversiones
 async function renderInvestments() {
   const investmentsContainer = document.getElementById('investments-container');
   investmentsContainer.innerHTML = '<h2>Inversiones</h2>';
@@ -124,10 +134,11 @@ async function renderInvestments() {
     const investments = await fetchData('Investments');
     investments.forEach(investment => {
       const investmentDiv = document.createElement('div');
+      investmentDiv.className = 'investment-item';
       investmentDiv.innerHTML = `
-        <p>Nombre: ${investment.Name}</p>
-        <p>Costo Original: $${investment.OriginalCost}</p>
-        <p>Valor Actual: $${investment.CurrentValue}</p>
+        <h3>${investment.Name}</h3>
+        <p>Costo original: $${investment.OriginalCost}</p>
+        <p>Valor actual: $${investment.CurrentValue}</p>
       `;
       investmentsContainer.appendChild(investmentDiv);
     });
@@ -137,5 +148,15 @@ async function renderInvestments() {
   }
 }
 
-// Iniciar la carga del dashboard cuando el DOM esté listo
+// Carga todas las secciones del panel
+async function loadDashboard() {
+  await renderAccounts();
+  await renderBudget();
+  await renderTransactions();
+  await renderGoals();
+  await renderDebts();
+  await renderInvestments();
+}
+
+// Carga el dashboard cuando la página se carga
 document.addEventListener('DOMContentLoaded', loadDashboard);
