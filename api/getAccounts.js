@@ -6,11 +6,11 @@ export default async function handler(req, res) {
   try {
     const sheetName = req.query.sheetName;
 
-    // A map to define the range and headers for each sheet dynamically
+    // Configuration for each sheet and its expected headers
     const sheetConfig = {
       Accounts: {
         range: "Accounts!A:C",
-        headers: ["ID", "Account Name", "Current Balance"]
+        headers: ["Account ID", "Account Name", "Current Balance"]
       },
       Transactions: {
         range: "Transactions!A:J",
@@ -38,10 +38,13 @@ export default async function handler(req, res) {
       return res.status(400).json({ status: "error", message: "Invalid sheetName provided." });
     }
 
+    // New way to handle credentials
+    const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+
     const auth = new google.auth.GoogleAuth({
       credentials: {
-        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        client_email: credentials.client_email,
+        private_key: credentials.private_key,
       },
       scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
     });
@@ -59,8 +62,7 @@ export default async function handler(req, res) {
     if (!data) {
       return res.status(200).json({ status: "success", data: [] });
     }
-    
-    // Check if the headers in the sheet match the expected headers
+
     const sheetHeaders = data.shift();
     if (JSON.stringify(sheetHeaders) !== JSON.stringify(headers)) {
         console.error(`Header mismatch for sheet: ${sheetName}`);
