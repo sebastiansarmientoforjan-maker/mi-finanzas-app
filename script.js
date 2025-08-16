@@ -1,6 +1,8 @@
 // REEMPLAZA ESTA URL CON LA URL DE TU API DE APPS SCRIPT
 const API_URL = 'https://script.google.com/macros/s/AKfycbzNfMfhGllurCXR0mn3XYikbFwZ-Pm-rV5V0PITwpTA-frljcPcyP00iCV72mmLn_pMow/exec';
 
+// --- FUNCIONES CORE: OBTENER Y RENDERIZAR DATOS ---
+
 // Función para obtener y mostrar datos
 async function fetchData(endpoint) {
     try {
@@ -40,11 +42,8 @@ async function renderAccounts() {
 async function renderBudget() {
     const budget = await fetchData('getBudget');
     if (budget.length > 0) {
-        // En un proyecto real, necesitarías sumar todos los presupuestos y gastos.
-        // Para este ejemplo, asumiremos un único presupuesto por simplicidad.
         const monthlyBudget = budget[0].MonthlyBudget;
         const spent = budget[0].SpentThisMonth;
-        const remaining = budget[0].Remaining;
         
         const progressPercent = (spent / monthlyBudget) * 100;
 
@@ -60,7 +59,7 @@ async function renderTransactions() {
     const transactionList = document.getElementById('transactionList');
     transactionList.innerHTML = '';
 
-    transactions.slice(0, 5).forEach(trans => { // Mostrar solo las 5 más recientes
+    transactions.slice(0, 5).forEach(trans => {
         const p = document.createElement('p');
         p.textContent = `${trans.Date} - ${trans.Description}: $${trans.Amount.toFixed(2)}`;
         transactionList.appendChild(p);
@@ -119,3 +118,78 @@ async function loadDashboard() {
 
 // Llamar a la función principal cuando la página se carga
 document.addEventListener('DOMContentLoaded', loadDashboard);
+
+
+// --- NUEVAS FUNCIONES PARA LA FASE 2A: INTERACCIÓN ---
+
+// Llenar el dropdown de Cuentas en el formulario
+async function fillAccountDropdown() {
+    const accounts = await fetchData('getAccounts');
+    const accountDropdown = document.getElementById('transactionAccount');
+    accountDropdown.innerHTML = ''; // Limpiar opciones anteriores
+    accounts.forEach(account => {
+        const option = document.createElement('option');
+        option.value = account['Account ID'];
+        option.textContent = account['Account Name'];
+        accountDropdown.appendChild(option);
+    });
+}
+
+// Lógica para mostrar/ocultar el modal
+const modal = document.getElementById('addTransactionModal');
+const showModalBtn = document.getElementById('showModalBtn');
+const closeBtn = document.querySelector('.close-btn');
+
+showModalBtn.onclick = function() {
+    modal.style.display = "block";
+    fillAccountDropdown();
+}
+
+closeBtn.onclick = function() {
+    modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+// Lógica para enviar el formulario
+document.getElementById('transactionForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const amount = parseFloat(document.getElementById('transactionAmount').value);
+    const description = document.getElementById('transactionDescription').value;
+    const category = document.getElementById('transactionCategory').value;
+    const date = document.getElementById('transactionDate').value;
+    const accountID = document.getElementById('transactionAccount').value;
+    
+    const payload = {
+        'ID': new Date().getTime(),
+        'Type': 'Gasto',
+        'Category': category,
+        'Description': description,
+        'Amount': amount,
+        'Date': date,
+        'Frequency': 'One-time',
+        'Status': 'Active',
+        'LastRecurrenceDate': '',
+        'Account': accountID
+    };
+
+    const response = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ endpoint: 'addEntry', payload: { sheetName: 'Transactions', data: payload } }),
+        headers: { 'Content-Type': 'application/json' }
+    });
+
+    const result = await response.json();
+    if (result.status === 'success') {
+        alert('Transacción añadida con éxito!');
+        modal.style.display = "none";
+        loadDashboard(); // Recarga el dashboard para mostrar la nueva transacción
+    } else {
+        alert('Error al añadir la transacción: ' + result.message);
+    }
+});
