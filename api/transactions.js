@@ -10,7 +10,22 @@ export default async function handler(req, res) {
     const table = base('Transactions');
 
     switch (req.method) {
-      case 'POST': // Create a new record
+      /**
+       * GET -> List all transactions
+       */
+      case 'GET': {
+        const records = await table.select({}).all();
+        const transactions = records.map((record) => ({
+          id: record.id,
+          ...record.fields,
+        }));
+        return res.status(200).json({ status: 'success', data: transactions });
+      }
+
+      /**
+       * POST -> Create a new transaction
+       */
+      case 'POST': {
         const { date, description, amount, account, category, frequency } = req.body;
         const createResult = await table.create([{
           fields: {
@@ -19,27 +34,47 @@ export default async function handler(req, res) {
             "Amount": parseFloat(amount),
             "Account": account,
             "Category": category,
-            "Frequency": frequency
-          }
+            "Frequency": frequency,
+          },
         }]);
         return res.status(201).json({ status: 'success', data: createResult });
+      }
 
-      case 'PUT': // Update an existing record
+      /**
+       * PUT -> Update an existing transaction
+       */
+      case 'PUT': {
         const { id, fields } = req.body;
-        const updateResult = await table.update([{
-          id,
-          fields
-        }]);
+        if (!id || !fields) {
+          return res.status(400).json({ status: 'error', message: 'ID and fields are required.' });
+        }
+        const updateResult = await table.update([{ id, fields }]);
         return res.status(200).json({ status: 'success', data: updateResult });
+      }
 
-      case 'DELETE': // Delete a record
+      /**
+       * DELETE -> Delete a transaction
+       */
+      case 'DELETE': {
         const { id: deleteId } = req.query;
-        console.log("Attempting to delete record with ID:", deleteId); // This will appear in your Vercel logs
-        const deleteResult = await table.destroy([deleteId]);
-        return res.status(200).json({ status: 'success', data: deleteResult });
+        console.log("Attempting to delete record with ID:", deleteId);
+        if (!deleteId) {
+          return res.status(400).json({ status: 'error', message: 'Transaction ID is required.' });
+        }
+        try {
+          const deleteResult = await table.destroy([deleteId]);
+          return res.status(200).json({ status: 'success', data: deleteResult });
+        } catch (err) {
+          console.error("Airtable delete error:", err);
+          return res.status(500).json({ status: 'error', message: 'Failed to delete transaction from Airtable.' });
+        }
+      }
 
+      /**
+       * Method not allowed
+       */
       default:
-        res.setHeader('Allow', ['POST', 'PUT', 'DELETE']);
+        res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
         return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
   } catch (error) {
