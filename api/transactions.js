@@ -28,16 +28,9 @@ export default async function handler(req, res) {
       case 'POST': {
         const { fields } = req.body;
         if (!fields) {
-            return res.status(400).json({ status: 'error', message: 'Fields are required.' });
+            return res.status(400).json({ status: 'error', message: 'Fields object is missing.' });
         }
         
-        // Verifica si todos los campos necesarios están presentes
-        const requiredFields = ["Date", "Description", "Amount", "Account", "Category", "Frequency"];
-        const missingFields = requiredFields.filter(field => fields[field] === undefined);
-        if (missingFields.length > 0) {
-            return res.status(400).json({ status: 'error', message: `Missing required fields: ${missingFields.join(', ')}` });
-        }
-
         const createResult = await table.create([{ fields }]);
         return res.status(201).json({ status: 'success', data: createResult });
       }
@@ -59,7 +52,6 @@ export default async function handler(req, res) {
        */
       case 'DELETE': {
         const { id: deleteId } = req.query;
-        console.log("Attempting to delete record with ID:", deleteId);
         if (!deleteId) {
           return res.status(400).json({ status: 'error', message: 'Transaction ID is required.' });
         }
