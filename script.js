@@ -107,7 +107,7 @@ async function createTransaction(fields) {
         });
         if (!response.ok) throw new Error('Failed to create transaction.');
         await loadDashboard();
-        alert('Transacción guardada con éxito!'); // Mensaje de éxito
+        alert('Transacción guardada con éxito!');
     } catch (error) {
         console.error('Error creating transaction:', error);
         alert('Error al crear la transacción.');
@@ -130,7 +130,6 @@ transactionForm.addEventListener('submit', async (e) => {
         amount = -Math.abs(amount);
     }
 
-    // Asegúrate de que los nombres de los campos coincidan exactamente con Airtable
     const fields = {
         "Date": date,
         "Description": description,
@@ -138,7 +137,9 @@ transactionForm.addEventListener('submit', async (e) => {
         "Account": account,
         "Category": category,
         "Frequency": frequency,
-        "LastRecurrenceDate": date // Guardamos la fecha de la transacción como la última fecha de recurrencia
+        "Status": "Completed",
+        "LastRecurrenceDate": date,
+        "Type": type
     };
 
     if (!description || isNaN(amount) || !category) {
