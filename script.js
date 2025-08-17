@@ -1,7 +1,7 @@
 // --- Airtable Configuration ---
 // IMPORTANT: Replace these placeholder values with your actual Airtable credentials.
 // You can find these in your Airtable account settings.
-const AIRTABLE_API_KEY = 'pat8GwdzOMYyyGxGg.df57051737bc757693d41b50b04b8d190ff0d26353afb99ddab38b6d43cf5644';
+const AIRTABLE_API_KEY = 'patYcBI08rNAsSo4X.49b0d177af90df8866ce5e385e2d8b3b9f7c571da3d639bf218c9d47b302b775';
 const AIRTABLE_BASE_ID = 'appWjZbCM25bli7RZ';
 const AIRTABLE_TABLE_NAME = 'Transactions'; // Make sure this matches your table name exactly
 
@@ -167,4 +167,5 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', saveTransaction);
     }
 });
+
 
