@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir Transacción - Mi Dashboard Financiero</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Mi Dashboard Financiero</h1>
+        <p>© 2024 Mi Finanzas</p>
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Dashboard</a>
+            <a href="transactions.html" class="nav-link">Transacciones</a>
+            <a href="budget.html" class="nav-link">Presupuesto</a>
+            <a href="goals.html" class="nav-link">Objetivos</a>
+            <a href="accounts.html" class="nav-link">Cuentas</a>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <section id="add-transaction-form-section" class="section-card">
+            <h2>Añadir Nueva Transacción</h2>
+            <form id="new-transaction-form">
+                <label for="date">Fecha:</label>
+                <input type="date" id="date" required>
+    
+                <label for="description">Descripción:</label>
+                <input type="text" id="description" required>
+    
+                <label for="amount">Monto:</label>
+                <input type="number" id="amount" step="0.01" required>
+    
+                <label for="type">Tipo:</label>
+                <select id="type" required>
+                    <option value="ingreso">Ingreso</option>
+                    <option value="gasto">Gasto</option>
+                </select>
+    
+                <label for="category">Categoría:</label>
+                <select id="category" required>
+                    <option value="">Selecciona una categoría</option>
+                </select>
+    
+                <label for="account">Cuenta:</label>
+                <input type="text" id="account" required>
+    
+                <label for="frequency">Periodicidad:</label>
+                <select id="frequency">
+                    <option value="none">Sin periodicidad</option>
+                    <option value="daily">Diario</option>
+                    <option value="weekly">Semanal</option>
+                    <option value="biweekly">Quincenal</option>
+                    <option value="monthly">Mensual</option>
+                    <option value="yearly">Anual</option>
+                </select>
+    
+                <button type="submit">Guardar Transacción</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
