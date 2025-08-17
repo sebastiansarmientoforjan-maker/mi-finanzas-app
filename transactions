@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transacciones - Mi Dashboard Financiero</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Mi Dashboard Financiero</h1>
+        <p>© 2024 Mi Finanzas</p>
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Dashboard</a>
+            <a href="transactions.html" class="nav-link active">Transacciones</a>
+            <a href="budget.html" class="nav-link">Presupuesto</a>
+            <a href="goals.html" class="nav-link">Objetivos</a>
+            <a href="accounts.html" class="nav-link">Cuentas</a>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <section id="all-transactions-container" class="section-card">
+            <h2>Todas las Transacciones</h2>
+            <div id="all-transactions-list"></div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
