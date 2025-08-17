@@ -13,68 +13,88 @@
     </header>
 
     <main class="dashboard-container">
+        <section class="section-card">
+            <h2>Resumen Financiero</h2>
+            <div class="totals-container">
+                <div class="total-card">
+                    <h3>Balance</h3>
+                    <p id="balance">0</p>
+                </div>
+                <div class="total-card">
+                    <h3>Ingresos</h3>
+                    <p id="total-income">0</p>
+                </div>
+                <div class="total-card">
+                    <h3>Gastos</h3>
+                    <p id="total-expense">0</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="add-transaction-section" class="section-card">
+            <h2>Añadir Nueva Transacción</h2>
+            <form id="new-transaction-form"> 
+                <label for="date">Fecha:</label>
+                <input type="date" id="date" required>
+    
+                <label for="description">Descripción:</label>
+                <input type="text" id="description" required>
+    
+                <label for="amount">Monto:</label>
+                <input type="number" id="amount" step="0.01" required>
+    
+                <label for="type">Tipo:</label>
+                <select id="type" required>
+                    <option value="ingreso">Ingreso</option>
+                    <option value="gasto">Gasto</option>
+                </select>
+    
+                <label for="account">Cuenta:</label>
+                <input type="text" id="account" required>
+    
+                <label for="category">Categoría:</label>
+                <input type="text" id="category" required>
+                
+                <label for="frequency">Periodicidad:</label>
+                <select id="frequency">
+                    <option value="none">Sin periodicidad</option>
+                    <option value="daily">Diario</option>
+                    <option value="weekly">Semanal</option>
+                    <option value="biweekly">Quincenal</option>
+                    <option value="monthly">Mensual</option>
+                    <option value="yearly">Anual</option>
+                </select>
+    
+                <button type="submit">Guardar Transacción</button>
+            </form>
+        </section>
+
         <section id="accounts-container" class="section-card">
             <h2>Cuentas</h2>
-            </section>
-
+        </section>
+        
         <section id="budget-container" class="section-card">
             <h2>Presupuesto</h2>
-            </section>
-
+        </section>
+        
         <section id="transactions-container" class="section-card">
             <h2>Transacciones Recientes</h2>
-            </section>
-
+            <div id="transactions-list"></div>
+        </section>
+        
         <section id="goals-container" class="section-card">
             <h2>Objetivos Financieros</h2>
-            </section>
-
+        </section>
+        
         <section id="debts-container" class="section-card">
             <h2>Deudas</h2>
-            </section>
-
+        </section>
+        
         <section id="investments-container" class="section-card">
             <h2>Inversiones</h2>
-            </section>
+        </section>
+
     </main>
-
-    <section id="add-transaction-section" class="form-container">
-        <h2>Añadir Nueva Transacción</h2>
-        <form id="new-transaction-form"> 
-            <label for="date">Fecha:</label>
-            <input type="date" id="date" required>
-
-            <label for="description">Descripción:</label>
-            <input type="text" id="description" required>
-
-            <label for="amount">Monto:</label>
-            <input type="number" id="amount" step="0.01" required>
-
-            <label for="type">Tipo:</label>
-            <select id="type" required>
-                <option value="ingreso">Ingreso</option>
-                <option value="gasto">Gasto</option>
-            </select>
-
-            <label for="account">Cuenta:</label>
-            <input type="text" id="account" required>
-
-            <label for="category">Categoría:</label>
-            <input type="text" id="category" required>
-            
-            <label for="frequency">Periodicidad:</label>
-            <select id="frequency">
-                <option value="none">Sin periodicidad</option>
-                <option value="daily">Diario</option>
-                <option value="weekly">Semanal</option>
-                <option value="biweekly">Quincenal</option>
-                <option value="monthly">Mensual</option>
-                <option value="yearly">Anual</option>
-            </select>
-
-            <button type="submit">Guardar Transacción</button>
-        </form>
-    </section>
 
     <script src="script.js"></script>
 </body>
