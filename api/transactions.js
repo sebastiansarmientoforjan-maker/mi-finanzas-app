@@ -26,9 +26,9 @@ export default async function handler(req, res) {
        * POST -> Create a new transaction
        */
       case 'POST': {
-        const { fields } = req.body;
+        const fields = req.body;
         if (!fields) {
-            return res.status(400).json({ status: 'error', message: 'Fields object is missing.' });
+            return res.status(400).json({ status: 'error', message: 'Request body is missing fields.' });
         }
         
         const createResult = await table.create([{ fields }]);
