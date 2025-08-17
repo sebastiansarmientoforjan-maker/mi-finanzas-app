@@ -86,8 +86,8 @@ header {
 
 /* Main Layout */
 .dashboard-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: var(--gap);
   padding: 24px;
   max-width: 1200px;
@@ -96,7 +96,6 @@ header {
 
 @media (min-width: 900px) {
   .dashboard-container {
-    display: grid;
     grid-template-columns: repeat(3, 1fr);
   }
 }
@@ -170,6 +169,8 @@ header {
   font-weight: 600;
   box-shadow: var(--shadow);
   transition: transform 0.1s ease;
+  width: 100%; /* Make button full width */
+  margin-top: auto; /* Push button to the bottom of the card */
 }
 
 .add-button:active {
@@ -191,4 +192,46 @@ header {
 
 .delete-btn:hover {
   background: rgba(255, 183, 178, 0.2);
+}
+
+/* Form Styles */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 600px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.form-grid label {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.form-grid input,
+.form-grid select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-family: 'Inter', sans-serif;
+}
+
+.form-grid input:focus,
+.form-grid select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(124, 198, 254, 0.2);
+}
+
+/* Make sure the form items are not full-width on mobile */
+@media (max-width: 599px) {
+  .form-grid input,
+  .form-grid select {
+    width: 100%;
+  }
 }
