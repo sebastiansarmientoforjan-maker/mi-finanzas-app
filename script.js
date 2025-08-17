@@ -2,11 +2,15 @@
 
 const TRANSACTIONS_API_URL = '/api/transactions';
 
+// Categorías dinámicas para ingresos y gastos
 const categories = {
   ingreso: ["Salario", "Regalo", "Inversión", "Reembolso", "Venta", "Otros Ingresos"],
   gasto: ["Alimentación", "Transporte", "Vivienda", "Facturas/Servicios", "Entretenimiento", "Salud", "Educación", "Compras", "Deudas", "Otros Gastos"]
 };
 
+/**
+ * Populates the category dropdown based on the selected transaction type.
+ */
 function populateCategories() {
   const typeSelect = document.getElementById('type');
   const categorySelect = document.getElementById('category');
@@ -20,8 +24,13 @@ function populateCategories() {
   });
 }
 
+/**
+ * Calculates and displays the total income, expenses, and balance.
+ * @param {Array<Object>} transactions - The array of transaction records.
+ */
 function calculateTotals(transactions) {
-  let income = 0, expense = 0;
+  let income = 0,
+    expense = 0;
   transactions.forEach(tx => {
     const amount = parseFloat(tx.Amount) || 0;
     if (amount >= 0) income += amount;
@@ -33,6 +42,10 @@ function calculateTotals(transactions) {
   document.getElementById('balance').textContent = balance.toFixed(2);
 }
 
+/**
+ * Renders the most recent transactions to the dashboard.
+ * @param {Array<Object>} transactions - The array of transaction records.
+ */
 function renderTransactions(transactions) {
   const listContainer = document.getElementById('transactions-list');
   listContainer.innerHTML = '';
@@ -56,10 +69,14 @@ function renderTransactions(transactions) {
   });
 }
 
+/**
+ * Fetches and loads dashboard data from the API.
+ */
 async function loadDashboard() {
   try {
     const response = await fetch(TRANSACTIONS_API_URL);
     const result = await response.json();
+    console.log("Transacciones cargadas:", result);
     const transactions = result.data || [];
     calculateTotals(transactions);
     renderTransactions(transactions);
@@ -68,17 +85,24 @@ async function loadDashboard() {
   }
 }
 
+/**
+ * Sends a POST request to create a new transaction.
+ * @param {Object} fields - The transaction data.
+ */
 async function createTransaction(fields) {
   try {
     const response = await fetch(TRANSACTIONS_API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      // 👇 Enviamos { fields } para alinearnos con el backend
-      body: JSON.stringify({ fields }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        fields
+      }), // Ensures the backend receives { fields: {...} }
     });
     if (!response.ok) {
-      const text = await response.text().catch(() => '');
-      throw new Error(`Failed to create transaction. ${text}`);
+      const errorText = await response.text().catch(() => 'Unknown error.');
+      throw new Error(`Failed to create transaction. ${errorText}`);
     }
     await loadDashboard();
     alert('¡Transacción guardada con éxito!');
@@ -88,6 +112,9 @@ async function createTransaction(fields) {
   }
 }
 
+/**
+ * Handles form submission for new transactions.
+ */
 const transactionForm = document.getElementById('new-transaction-form');
 transactionForm.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -103,6 +130,7 @@ transactionForm.addEventListener('submit', async (e) => {
     amount = -Math.abs(amount);
   }
 
+  // Ensure field names match Airtable's schema exactly
   const fields = {
     Date: date,
     Description: description,
@@ -110,9 +138,9 @@ transactionForm.addEventListener('submit', async (e) => {
     Account: account,
     Category: category,
     Frequency: frequency,
-    Status: 'Completed',
+    Status: "Completed",
     LastRecurrenceDate: date,
-    Type: type, // el backend mapea a 'Ingreso'/'Gasto' si hace falta
+    Type: type,
   };
 
   if (!description || isNaN(amount) || !category) {
@@ -123,15 +151,19 @@ transactionForm.addEventListener('submit', async (e) => {
   e.target.reset();
 });
 
+/**
+ * Handles delete and edit button clicks for transactions.
+ */
 document.addEventListener('click', async (e) => {
   const txItem = e.target.closest('.transaction-item');
   if (!txItem) return;
   const transactionId = txItem.dataset.id;
-
   if (e.target.classList.contains('delete-btn')) {
     if (!confirm('¿Seguro que quieres eliminar esta transacción?')) return;
     try {
-      const response = await fetch(`${TRANSACTIONS_API_URL}?id=${transactionId}`, { method: 'DELETE' });
+      const response = await fetch(`${TRANSACTIONS_API_URL}?id=${transactionId}`, {
+        method: 'DELETE'
+      });
       if (!response.ok) throw new Error('Failed to delete transaction.');
       await loadDashboard();
     } catch (error) {
@@ -139,15 +171,21 @@ document.addEventListener('click', async (e) => {
       alert('Error al eliminar la transacción.');
     }
   }
-
   if (e.target.classList.contains('edit-btn')) {
     const newDescription = prompt('Nueva descripción:');
     if (!newDescription) return;
     try {
       const response = await fetch(TRANSACTIONS_API_URL, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: transactionId, fields: { Description: newDescription } }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: transactionId,
+          fields: {
+            Description: newDescription
+          }
+        }),
       });
       if (!response.ok) throw new Error('Failed to update transaction.');
       await loadDashboard();
@@ -158,8 +196,10 @@ document.addEventListener('click', async (e) => {
   }
 });
 
+// Event listener to update categories when transaction type changes
 document.getElementById('type').addEventListener('change', populateCategories);
 
+// Initialize the dashboard when the page loads
 document.addEventListener('DOMContentLoaded', () => {
   populateCategories();
   loadDashboard();
