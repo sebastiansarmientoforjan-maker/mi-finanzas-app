@@ -26,17 +26,19 @@ export default async function handler(req, res) {
        * POST -> Create a new transaction
        */
       case 'POST': {
-        const { date, description, amount, account, category, frequency } = req.body;
-        const createResult = await table.create([{
-          fields: {
-            "Date": date,
-            "Description": description,
-            "Amount": parseFloat(amount),
-            "Account": account,
-            "Category": category,
-            "Frequency": frequency,
-          },
-        }]);
+        const { fields } = req.body;
+        if (!fields) {
+            return res.status(400).json({ status: 'error', message: 'Fields are required.' });
+        }
+        
+        // Verifica si todos los campos necesarios están presentes
+        const requiredFields = ["Date", "Description", "Amount", "Account", "Category", "Frequency"];
+        const missingFields = requiredFields.filter(field => fields[field] === undefined);
+        if (missingFields.length > 0) {
+            return res.status(400).json({ status: 'error', message: `Missing required fields: ${missingFields.join(', ')}` });
+        }
+
+        const createResult = await table.create([{ fields }]);
         return res.status(201).json({ status: 'success', data: createResult });
       }
 
