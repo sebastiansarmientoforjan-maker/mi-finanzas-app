@@ -1,5 +1,6 @@
 // script.js
 
+const API_URL = '/api/getAccounts';
 const TRANSACTIONS_API_URL = '/api/transactions';
 
 // Calcular totales y balance
@@ -117,12 +118,40 @@ document.addEventListener('click', async (e) => {
 // Formulario nuevo
 document.getElementById('new-transaction-form').addEventListener('submit', async (e) => {
   e.preventDefault();
+  const date = document.getElementById('date').value;
   const description = document.getElementById('description').value;
-  const amount = parseFloat(document.getElementById('amount').value);
-  if (!description || isNaN(amount)) return alert('Completa todos los campos.');
-  await createTransaction({ Description: description, Amount: amount });
-  e.target.reset();
+  let amount = parseFloat(document.getElementById('amount').value);
+  const type = document.getElementById('type').value; // Nueva línea
+  const account = document.getElementById('account').value;
+  const category = document.getElementById('category').value; // Nueva línea
+  const frequency = document.getElementById('frequency').value;
+
+  // Convertir el monto a negativo si es un gasto
+  if (type === 'gasto') {
+    amount = -Math.abs(amount); // Nueva línea
+  }
+
+  const newTransaction = { date, description, amount, account, category, frequency };
+
+  try {
+    const response = await fetch(TRANSACTIONS_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newTransaction),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add transaction.');
+    }
+    await loadDashboard(); // Reload data
+    transactionForm.reset();
+  } catch (error) {
+    console.error('Error adding transaction:', error);
+    alert('Error al guardar la transacción.');
+  }
 });
 
 // Inicializar
-loadDashboard();
+document.addEventListener('DOMContentLoaded', loadDashboard);
