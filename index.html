@@ -4,11 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Dashboard Financiero</title>
+    <!-- New CSS Link -->
     <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts Links -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <h1>Mi Dashboard Financiero</h1>
+        <h1>Mi Finanzas</h1>
         <p>© 2024 Mi Finanzas</p>
         <nav class="main-nav">
             <a href="index.html" class="nav-link active">Dashboard</a>
@@ -20,6 +25,7 @@
     </header>
 
     <main class="dashboard-container">
+        <!-- Contenedores para el balance, ingresos y gastos -->
         <section class="section-card">
             <h2>Resumen Financiero</h2>
             <div class="totals-container">
@@ -38,12 +44,14 @@
             </div>
         </section>
 
+        <!-- Botón de acción para añadir transacción -->
         <section id="add-transaction-section" class="section-card">
             <h2>Añadir Nueva Transacción</h2>
             <p>Haz clic para registrar un nuevo ingreso o gasto.</p>
             <a href="add-transaction.html" class="add-button">Añadir Transacción</a>
         </section>
 
+        <!-- Aquí se mostrarán las transacciones recientes -->
         <section id="transactions-container" class="section-card">
             <h2>Transacciones Recientes</h2>
             <div id="transactions-list"></div>
