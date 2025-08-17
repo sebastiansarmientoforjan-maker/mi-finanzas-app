@@ -1,6 +1,5 @@
 // script.js
 
-const API_URL = '/api/getAccounts';
 const TRANSACTIONS_API_URL = '/api/transactions';
 
 // Categorías dinámicas para ingresos y gastos
@@ -33,10 +32,8 @@ function populateCategories() {
     const categorySelect = document.getElementById('category');
     const selectedType = typeSelect.value;
 
-    // Limpia las opciones actuales
     categorySelect.innerHTML = '<option value="">Selecciona una categoría</option>';
 
-    // Añade las nuevas opciones basadas en el tipo
     categories[selectedType].forEach(category => {
         const option = document.createElement('option');
         option.value = category;
@@ -91,6 +88,7 @@ async function loadDashboard() {
     try {
         const response = await fetch(TRANSACTIONS_API_URL);
         const result = await response.json();
+        console.log("Transacciones cargadas:", result);
         const transactions = result.data || [];
         calculateTotals(transactions);
         renderTransactions(transactions);
@@ -109,11 +107,47 @@ async function createTransaction(fields) {
         });
         if (!response.ok) throw new Error('Failed to create transaction.');
         await loadDashboard();
+        alert('Transacción guardada con éxito!'); // Mensaje de éxito
     } catch (error) {
         console.error('Error creating transaction:', error);
         alert('Error al crear la transacción.');
     }
 }
+
+// Formulario nuevo
+const transactionForm = document.getElementById('new-transaction-form');
+transactionForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const date = document.getElementById('date').value;
+    const description = document.getElementById('description').value;
+    let amount = parseFloat(document.getElementById('amount').value);
+    const type = document.getElementById('type').value;
+    const account = document.getElementById('account').value;
+    const category = document.getElementById('category').value;
+    const frequency = document.getElementById('frequency').value;
+
+    if (type === 'gasto') {
+        amount = -Math.abs(amount);
+    }
+
+    // Asegúrate de que los nombres de los campos coincidan exactamente con Airtable
+    const fields = {
+        "Date": date,
+        "Description": description,
+        "Amount": amount,
+        "Account": account,
+        "Category": category,
+        "Frequency": frequency,
+        "LastRecurrenceDate": date // Guardamos la fecha de la transacción como la última fecha de recurrencia
+    };
+
+    if (!description || isNaN(amount) || !category) {
+        return alert('Completa todos los campos, incluyendo una categoría válida.');
+    }
+
+    await createTransaction(fields);
+    e.target.reset();
+});
 
 // Editar y eliminar
 document.addEventListener('click', async (e) => {
@@ -149,39 +183,6 @@ document.addEventListener('click', async (e) => {
             alert('Error al actualizar la transacción.');
         }
     }
-});
-
-// Formulario nuevo
-const transactionForm = document.getElementById('new-transaction-form');
-transactionForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const date = document.getElementById('date').value;
-    const description = document.getElementById('description').value;
-    let amount = parseFloat(document.getElementById('amount').value);
-    const type = document.getElementById('type').value;
-    const account = document.getElementById('account').value;
-    const category = document.getElementById('category').value;
-    const frequency = document.getElementById('frequency').value;
-
-    if (type === 'gasto') {
-        amount = -Math.abs(amount);
-    }
-
-    const fields = {
-        "Date": date,
-        "Description": description,
-        "Amount": amount,
-        "Account": account,
-        "Category": category,
-        "Frequency": frequency
-    };
-
-    if (!description || isNaN(amount) || !category) {
-        return alert('Completa todos los campos, incluyendo una categoría válida.');
-    }
-
-    await createTransaction(fields);
-    e.target.reset();
 });
 
 // Event listener para actualizar categorías al cambiar el tipo
