@@ -3,7 +3,7 @@
 // You can find these in your Airtable account settings.
 const AIRTABLE_API_KEY = 'pat8GwdzOMYyyGxGg.df57051737bc757693d41b50b04b8d190ff0d26353afb99ddab38b6d43cf5644';
 const AIRTABLE_BASE_ID = 'appWjZbCM25bli7RZ';
-const AIRTABLE_TABLE_NAME = 'Finanzas App'; // Make sure this matches your table name exactly
+const AIRTABLE_TABLE_NAME = 'Transactions'; // Make sure this matches your table name exactly
 
 // --- Helper Functions ---
 const formatCurrency = (amount) => {
@@ -167,3 +167,4 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', saveTransaction);
     }
 });
+
